@@ -21,16 +21,40 @@
   --shadow-modal: 0 25px 50px -12px rgba(58, 37, 26, 0.15);
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: clip;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+  background-color: var(--color-boutique-bg);
+  color: var(--color-boutique-brown);
+  font-family: var(--font-sans);
+}
+
+#root {
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: clip;
+  isolation: isolate;
+}
+
 .bg-pattern {
   background-image: url("/arka_plan.png");
   background-size: 800px;
   background-repeat: repeat;
-}
-
-body {
-  background-color: var(--color-brand-cream);
-  color: var(--color-brand-brown);
-  font-family: var(--font-sans);
 }
 
 /* Custom styles for 3d button effect */
@@ -58,14 +82,13 @@ body {
   box-shadow: 0 0px 2px rgba(0,0,0,0.05), inset 0 1px 2px rgba(255,255,255,1), 0 4px 0 #dccfb9;
 }
 
-/* Clould like container */
+/* Cloud like container */
 .cloud-card {
   position: relative;
   border-radius: 40px;
   background-color: white;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05), inset 0 0 0 2px rgba(255,255,255,0.8);
 }
-/* A subtle wavy cloud shape using border radius variations would be nice, but simple rounded is safer and looks great */
 .cloud-card.blue { background: linear-gradient(135deg, #eaf4f7 0%, #d8eaf1 100%); }
 .cloud-card.pink { background: linear-gradient(135deg, #fef4ee 0%, #fadbd0 100%); }
 .cloud-card.green { background: linear-gradient(135deg, #f0f4ea 0%, #e1ebd6 100%); }
