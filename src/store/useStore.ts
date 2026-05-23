@@ -76,6 +76,7 @@ type StoreState = {
   addToCart: (item: Omit<CartItem, 'id'>) => void;
   removeFromCart: (id: string) => void;
   updateCartItemQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
 
   isPersonalizationModalOpen: boolean;
   selectedProduct: Product | null;
@@ -148,6 +149,8 @@ export const useStore = create<StoreState>((set, get) => ({
           : i
       ),
     })),
+
+  clearCart: () => set({ cartItems: [], isCartOpen: false }),
 
   isPersonalizationModalOpen: false,
   selectedProduct: null,
