@@ -45,9 +45,9 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
 
         <div className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Email or username</label>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
