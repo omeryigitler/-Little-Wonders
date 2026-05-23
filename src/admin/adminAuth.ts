@@ -8,6 +8,30 @@ export const clearAdminSession = () => {
   localStorage.removeItem(ADMIN_TOKEN_KEY);
 };
 
+export const isAuthErrorMessage = (message = '') => {
+  const normalized = message.toLowerCase();
+
+  return (
+    normalized.includes('invalid signature') ||
+    normalized.includes('jwt expired') ||
+    normalized.includes('unauthorized') ||
+    normalized.includes('missing token') ||
+    normalized.includes('please sign in')
+  );
+};
+
+export const handleAdminAuthError = (error: unknown) => {
+  const message = (error as Error).message || '';
+
+  if (isAuthErrorMessage(message)) {
+    clearAdminSession();
+    window.location.assign('/admin');
+    return true;
+  }
+
+  return false;
+};
+
 export const loginAdmin = async (email: string, password: string) => {
   const response = await fetch('/api/admin/login', {
     method: 'POST',
@@ -18,6 +42,7 @@ export const loginAdmin = async (email: string, password: string) => {
   const data = await response.json();
 
   if (!response.ok) {
+    clearAdminSession();
     throw new Error(data.error || 'Admin login failed.');
   }
 
