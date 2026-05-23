@@ -36,7 +36,7 @@ export const ImageUploader = ({ images, onImagesChange }: ImageUploaderProps) =>
       const token = getAdminToken();
       const fileDataUrl = await fileToDataUrl(file);
 
-      const response = await fetch('/api/admin/upload-image', {
+      const response = await fetch('/api/admin/remove-bg-upload', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
