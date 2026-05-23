@@ -1,82 +1,113 @@
-# Little Wonders Cloudinary + Database Start
+# Little Wonders
 
-Copy these files into your project.
+Personalized baby gift storefront with an admin product flow.
 
-Changed files:
+## What Is Connected
 
-- `package.json`
-- `server/api.ts`
-- `prisma/schema.prisma`
-- `src/store/useStore.ts`
-- `src/Storefront.tsx`
-- `src/admin/ProductForm.tsx`
-- `src/admin/ImageUploader.tsx`
-- `src/admin/AdminProducts.tsx`
-- `.env.example`
-- `vercel.json`
+- Storefront product cards use cloud-style backgrounds.
+- Admin product form uploads one product image, lets you choose the cloud style, and previews the exact storefront card.
+- Product data is designed to persist in PostgreSQL through Prisma.
+- Product images are designed to upload to Cloudinary.
+- The app is ready to be imported into Vercel from GitHub.
 
-Important setup:
+## Repository
 
-1. Add these environment variables in Vercel Project Settings → Environment Variables:
+GitHub repo:
 
+```txt
+https://github.com/omeryigitler/-Little-Wonders
+```
+
+The old source remote is kept locally as `omery-ship-it`.
+
+## Local Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the app:
+
+```bash
+npm run dev
+```
+
+Open:
+
+```txt
+http://localhost:3000
+```
+
+Admin product form:
+
+```txt
+http://localhost:3000/admin/products/new
+```
+
+Current MVP admin login:
+
+```txt
+admin@boutique.com
+admin
+```
+
+Change this before real launch.
+
+## Required Environment Variables
+
+Create `.env` locally and add the same values in Vercel Project Settings.
+
+```bash
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require"
 JWT_SECRET="change-this-secret"
 CLOUDINARY_CLOUD_NAME="your_cloud_name"
 CLOUDINARY_API_KEY="your_api_key"
 CLOUDINARY_API_SECRET="your_api_secret"
+```
 
-2. Install new dependency:
+Without `DATABASE_URL`, the storefront still shows demo fallback products, but `/api/products` cannot return saved database products.
 
-npm install
+Without the Cloudinary variables, admin image upload will not work.
 
-3. Apply Prisma schema to the database:
+## Database Setup
 
+After `DATABASE_URL` is added:
+
+```bash
 npx prisma db push
+```
 
-4. Commit and push:
+This creates the tables from `prisma/schema.prisma`.
 
-git add .
-git commit -m "Connect products to Cloudinary and database"
-git push origin main
+## Product Flow
 
-5. Test:
+1. Go to `/admin/products/new`.
+2. Fill product name, description, and price.
+3. Upload one product image.
+4. Pick Blue, Peach, or Mint cloud style.
+5. Check the live storefront card preview.
+6. Save product.
+7. The product appears on the homepage through `/api/products`.
 
-- `/admin/products/new`
-- Upload image
-- Select cloud style
-- Save product
-- Homepage should fetch from `/api/products`
+## Vercel Setup
 
-Notes:
+1. Import the GitHub repo into Vercel:
 
-# Vercel API Fix
+```txt
+omeryigitler/-Little-Wonders
+```
 
-Problem:
-`/api/products` was returning the homepage because `vercel.json` rewrote every path to `/`.
+2. Add the environment variables listed above.
+3. Run `npx prisma db push` once against the production database.
+4. Deploy.
 
-Fix:
-1. Replace `vercel.json`.
-2. Add Vercel serverless API files.
-3. Add `@vercel/node` to `devDependencies` in `package.json`.
+The `vercel.json` file keeps `/admin` and `/admin/*` routes working as SPA routes while leaving `/api/*` available for serverless functions.
 
-Files to copy:
+## Validation Commands
 
-- `vercel.json`
-- `lib/prisma.ts`
-- `lib/auth.ts`
-- `lib/products.ts`
-- `api/products.ts`
-- `api/admin/login.ts`
-- `api/admin/products.ts`
-- `api/admin/upload-image.ts`
-
-Also update `package.json`:
-
-```json
-"devDependencies": {
-  "@vercel/node": "^5.5.0"
-}
-
-- The current MVP still uses hardcoded admin login: `admin@boutique.com / admin`.
-- Change this before real launch.
-- The `card_bg_image` field was added to Prisma so the cloud background is stored properly.
+```bash
+npm run lint
+npm run build
+```
