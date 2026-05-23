@@ -17,6 +17,7 @@ export default function App() {
           <Route index element={<div className="text-gray-500 font-medium h-full flex items-center justify-center">Dashboard coming soon...</div>} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="products/new" element={<ProductForm />} />
+          <Route path="products/:id/edit" element={<ProductForm />} />
           <Route path="templates" element={<PersonalizationTemplateManager />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>
