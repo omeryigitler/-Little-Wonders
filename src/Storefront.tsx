@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Search, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useStore } from './store/useStore';
 import { CartDrawer } from './components/CartDrawer';
 import { PersonalizationModal } from './components/PersonalizationModal';
@@ -21,6 +22,10 @@ const DecorativeElement = ({ src, className, size = "w-20 md:w-24 h-auto", rotat
 export default function Storefront() {
   const { openCart, cartItems, products, loadProducts, productsLoading } = useStore();
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const productRows = products.reduce<typeof products[]>((rows, product, index) => {
     const rowIndex = Math.floor(index / 3);
@@ -48,22 +53,22 @@ export default function Storefront() {
       {/* Header */}
       <header className="w-full flex items-center justify-between px-6 md:px-12 py-5 relative z-30 bg-boutique-bg/80 backdrop-blur-md border-b border-boutique-brown/5">
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-boutique-brown-light">
-          <a href="#" className="hover:text-boutique-wood transition-colors flex items-center gap-2">Shop <img src="/cloud-watercolor-pink.png" className="w-6 object-contain opacity-85 drop-shadow-[0_3px_5px_rgba(58,37,26,0.18)]" alt=""/></a>
-          <a href="#" className="hover:text-boutique-wood transition-colors flex items-center gap-2">Personalization <img src="/cloud-watercolor-blue-light.png" className="w-6 object-contain opacity-85 drop-shadow-[0_3px_5px_rgba(58,37,26,0.18)]" alt=""/></a>
-          <a href="#" className="hover:text-boutique-wood transition-colors flex items-center gap-2">Gifts <img src="/cloud-watercolor-blue-dense.png" className="w-6 object-contain opacity-85 drop-shadow-[0_3px_5px_rgba(58,37,26,0.18)]" alt=""/></a>
-          <a href="#" className="hover:text-boutique-wood transition-colors">Our Story</a>
+          <button type="button" onClick={() => scrollToSection('shop')} className="hover:text-boutique-wood transition-colors flex items-center gap-2">Shop <img src="/cloud-watercolor-pink.png" className="w-6 object-contain opacity-85 drop-shadow-[0_3px_5px_rgba(58,37,26,0.18)]" alt=""/></button>
+          <button type="button" onClick={() => scrollToSection('personalization')} className="hover:text-boutique-wood transition-colors flex items-center gap-2">Personalization <img src="/cloud-watercolor-blue-light.png" className="w-6 object-contain opacity-85 drop-shadow-[0_3px_5px_rgba(58,37,26,0.18)]" alt=""/></button>
+          <button type="button" onClick={() => scrollToSection('gifts')} className="hover:text-boutique-wood transition-colors flex items-center gap-2">Gifts <img src="/cloud-watercolor-blue-dense.png" className="w-6 object-contain opacity-85 drop-shadow-[0_3px_5px_rgba(58,37,26,0.18)]" alt=""/></button>
+          <button type="button" onClick={() => scrollToSection('our-story')} className="hover:text-boutique-wood transition-colors">Our Story</button>
         </nav>
 
-        <div className="flex-1 flex justify-center md:absolute md:left-1/2 md:-translate-x-1/2">
+        <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex-1 flex justify-center md:absolute md:left-1/2 md:-translate-x-1/2">
           <div className="flex items-center gap-2">
             <span className="font-serif text-[30px] leading-none md:text-[36px] text-boutique-brown tracking-wide translate-y-1 relative z-10">Little Wonders</span>
             <img src="/decorative-moon-star.png" className="w-6 h-6 md:w-7 md:h-7 object-contain -translate-y-2 opacity-80 z-0" alt="Moon Star" />
           </div>
-        </div>
+        </button>
 
         <div className="flex items-center gap-6 text-boutique-brown">
-          <button className="hover:text-boutique-wood transition-colors p-2"><Search size={22} strokeWidth={1.5} /></button>
-          <button onClick={openCart} className="hover:text-boutique-wood transition-colors p-2 relative">
+          <button type="button" onClick={() => scrollToSection('shop')} className="hover:text-boutique-wood transition-colors p-2"><Search size={22} strokeWidth={1.5} /></button>
+          <button type="button" onClick={openCart} className="hover:text-boutique-wood transition-colors p-2 relative">
             <ShoppingBag size={22} strokeWidth={1.5} />
             {cartItemCount > 0 && (
               <span className="absolute top-1 right-1 w-4 h-4 bg-boutique-brown text-white text-[10px] font-bold rounded-full flex items-center justify-center">
@@ -99,7 +104,7 @@ export default function Storefront() {
         </div>
 
         {/* Headings */}
-        <div className="text-center max-w-4xl px-6 mb-6 md:mb-3 relative z-10 mt-2">
+        <div id="gifts" className="scroll-mt-24 text-center max-w-4xl px-6 mb-6 md:mb-3 relative z-10 mt-2">
           <h1 className="font-serif text-[42px] leading-[1.15] md:text-[64px] text-boutique-brown mb-5 md:mb-4">
             <span className="relative inline-block">
               Personalized Baby Gifts
@@ -115,13 +120,13 @@ export default function Storefront() {
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-6 mb-5 md:mb-0 justify-center w-full max-w-2xl px-4 relative z-10">
-          <button className="relative flex items-center justify-center cursor-pointer min-w-[280px] md:min-w-[300px] h-[72px] md:h-[68px] hover:-translate-y-1 transition-transform group">
+          <button type="button" onClick={() => scrollToSection('shop')} className="relative flex items-center justify-center cursor-pointer min-w-[280px] md:min-w-[300px] h-[72px] md:h-[68px] hover:-translate-y-1 transition-transform group">
             <img src="/btn-paw-blank-taupe.png" className="absolute inset-0 w-full h-full object-fill drop-shadow-md group-active:drop-shadow-sm transition-all" alt="" />
             <span className="relative z-10 flex items-center gap-2 font-bold text-boutique-brown text-[17px] md:text-lg px-8 text-center leading-tight">
               Shop Personalized Gifts
             </span>
           </button>
-          <button className="relative flex items-center justify-center cursor-pointer min-w-[280px] md:min-w-[300px] h-[72px] md:h-[68px] hover:-translate-y-1 transition-transform group">
+          <button type="button" onClick={() => scrollToSection('shop')} className="relative flex items-center justify-center cursor-pointer min-w-[280px] md:min-w-[300px] h-[72px] md:h-[68px] hover:-translate-y-1 transition-transform group">
             <img src="/btn-paw-blank-cream.png" className="absolute inset-0 w-full h-full object-fill drop-shadow-md group-active:drop-shadow-sm transition-all" alt="" />
             <span className="relative z-10 flex items-center gap-2 font-bold text-boutique-brown text-[17px] md:text-lg px-8 text-center leading-tight">
               Explore New Arrivals
@@ -133,7 +138,7 @@ export default function Storefront() {
           <p className="text-boutique-brown-light text-sm mb-6 relative z-20">Loading products...</p>
         )}
 
-        <div className="flex flex-col gap-y-14 px-4 md:px-8 w-full max-w-[1620px] mx-auto z-20 relative md:-mb-6 md:-mt-4">
+        <div id="shop" className="scroll-mt-24 flex flex-col gap-y-14 px-4 md:px-8 w-full max-w-[1620px] mx-auto z-20 relative md:-mb-6 md:-mt-4">
           {productRows.map((row, rowIndex) => (
             <div
               key={rowIndex}
@@ -151,14 +156,14 @@ export default function Storefront() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-boutique-bg border-t border-boutique-brown/10 relative z-20 pt-6 md:pt-8 pb-6 md:pb-8 mt-6">
+      <footer id="our-story" className="scroll-mt-24 w-full bg-boutique-bg border-t border-boutique-brown/10 relative z-20 pt-6 md:pt-8 pb-6 md:pb-8 mt-6">
         <div className="max-w-[1300px] mx-auto px-6 grid grid-cols-1 md:grid-cols-4 md:divide-x divide-y md:divide-y-0 divide-boutique-brown/15 relative z-10">
 
           <div className="flex flex-col items-start gap-2 py-4 md:py-0 md:pr-10">
-             <div className="flex items-end gap-3 mb-1">
+             <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-end gap-3 mb-1 text-left">
                <img src="/toy-rocking-horse-beige.png" className="w-[108px] md:w-[128px] h-auto object-contain mix-blend-multiply flex-shrink-0 drop-shadow-sm" alt="Rocking Horse" />
                <span className="font-serif text-[20px] md:text-[24px] tracking-wide text-boutique-brown leading-none pb-2 md:pb-3">Little Wonders</span>
-             </div>
+             </button>
              <p className="font-sans text-boutique-brown-light leading-relaxed max-w-[260px] text-[13px] opacity-90">
                 Crafting expertly personalized baby gifts and nursery essentials with love and care.
              </p>
@@ -173,19 +178,19 @@ export default function Storefront() {
               </div>
             </h4>
             <div className="flex flex-col gap-2">
-              <a href="#" className="hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">New Arrivals</a>
-              <a href="#" className="hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">Personalized Gifts</a>
+              <button type="button" onClick={() => scrollToSection('shop')} className="text-left hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">New Arrivals</button>
+              <button type="button" onClick={() => scrollToSection('shop')} className="text-left hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">Personalized Gifts</button>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 py-4 md:py-0 md:px-10">
+          <div id="personalization" className="scroll-mt-24 flex flex-col gap-3 py-4 md:py-0 md:px-10">
             <h4 className="font-serif tracking-[0.1em] text-boutique-brown text-sm md:text-[14px] uppercase flex items-center gap-3 mb-1">
               SUPPORT 
               <img src="/toy-drum-blue.png" className="w-[60px] h-auto object-contain mix-blend-multiply translate-y-[-2px] drop-shadow-sm" alt="" />
             </h4>
             <div className="flex flex-col gap-2">
-              <a href="#" className="hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">Shipping & Returns</a>
-              <a href="#" className="hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">Care Instructions</a>
+              <Link to="/track-order" className="hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">Track Your Order</Link>
+              <button type="button" onClick={() => scrollToSection('personalization')} className="text-left hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">Personalization Help</button>
             </div>
           </div>
 
@@ -197,6 +202,9 @@ export default function Storefront() {
             <p className="font-sans text-boutique-brown-light leading-relaxed opacity-90 text-[13px] md:text-[14px] max-w-[240px]">
               Join our newsletter for magical updates and early access to new collections.
             </p>
+            <Link to="/track-order" className="inline-flex w-fit rounded-full bg-boutique-brown px-4 py-2 text-xs font-bold text-white hover:bg-boutique-wood transition-colors">
+              Track Order
+            </Link>
             <img src="/cloud-watercolor-blue-light.png" className="absolute -bottom-10 right-[0%] md:right-[-10%] w-[140px] h-auto object-contain mix-blend-multiply opacity-50 z-0 pointer-events-none md:translate-x-[50%]" alt="" />
           </div>
 
