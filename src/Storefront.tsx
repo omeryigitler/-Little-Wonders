@@ -38,7 +38,7 @@ export default function Storefront() {
   }, [loadProducts]);
 
   return (
-    <div className="w-full min-h-screen bg-boutique-bg font-sans overflow-x-hidden relative selection:bg-boutique-wood-light">
+    <div className="w-full min-h-screen bg-boutique-bg font-sans overflow-x-clip relative selection:bg-boutique-wood-light">
       <CartDrawer />
       <PersonalizationModal />
 
@@ -75,7 +75,7 @@ export default function Storefront() {
       </header>
 
       {/* Main Hero */}
-      <main className="flex-1 relative z-10 flex flex-col items-center justify-start pt-10 md:pt-4 pb-8 md:pb-0">
+      <main className="flex-1 relative z-10 flex flex-col items-center justify-start pt-10 md:pt-4 pb-8 md:pb-0 overflow-visible">
 
         {/* Glow mask for readability over pattern */}
         <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[150vw] md:w-[1400px] h-[700px] bg-[radial-gradient(ellipse_at_center,rgba(252,250,246,1)_0%,rgba(252,250,246,0.9)_30%,rgba(252,250,246,0.5)_55%,rgba(252,250,246,0)_80%)] -translate-y-1/2 pointer-events-none -z-10"></div>
