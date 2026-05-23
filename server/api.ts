@@ -179,6 +179,95 @@ router.post('/admin/upload-image', requireAdmin, async (req, res) => {
 });
 
 // ---------------------------------------------------------
+// remove.bg + Cloudinary Upload
+// ---------------------------------------------------------
+router.post('/admin/remove-bg-upload', requireAdmin, async (req, res) => {
+  try {
+    const { file, folder = 'little-wonders/products' } = req.body;
+
+    if (!file || typeof file !== 'string') {
+      return res.status(400).json({ error: 'Missing image file.' });
+    }
+
+    if (!process.env.REMOVE_BG_API_KEY) {
+      return res.status(500).json({
+        error: 'REMOVE_BG_API_KEY environment variable is missing.',
+      });
+    }
+
+    if (
+      !process.env.CLOUDINARY_CLOUD_NAME ||
+      !process.env.CLOUDINARY_API_KEY ||
+      !process.env.CLOUDINARY_API_SECRET
+    ) {
+      return res.status(500).json({
+        error: 'Cloudinary environment variables are missing.',
+      });
+    }
+
+    const base64Data = file.includes(',')
+      ? file.split(',')[1]
+      : file;
+
+    const imageBuffer = Buffer.from(base64Data, 'base64');
+
+    const imageBlob = new Blob([imageBuffer], {
+      type: 'image/png',
+    });
+
+    const formData = new FormData();
+    formData.append('size', 'auto');
+    formData.append('format', 'png');
+    formData.append('image_file', imageBlob, 'image.png');
+
+    const removeBgResponse = await fetch('https://api.remove.bg/v1.0/removebg', {
+      method: 'POST',
+      headers: {
+        'X-Api-Key': process.env.REMOVE_BG_API_KEY,
+      },
+      body: formData,
+    });
+
+    if (!removeBgResponse.ok) {
+      const errorText = await removeBgResponse.text();
+
+      return res.status(removeBgResponse.status).json({
+        error: 'remove.bg failed',
+        details: errorText,
+      });
+    }
+
+    const transparentArrayBuffer = await removeBgResponse.arrayBuffer();
+    const transparentBuffer = Buffer.from(transparentArrayBuffer);
+    const transparentBase64 = transparentBuffer.toString('base64');
+
+    const result = await cloudinary.uploader.upload(
+      `data:image/png;base64,${transparentBase64}`,
+      {
+        folder,
+        resource_type: 'image',
+        transformation: [
+          { width: 900, height: 900, crop: 'limit' },
+          { quality: 'auto', fetch_format: 'auto' },
+        ],
+      }
+    );
+
+    res.json({
+      imageUrl: result.secure_url,
+      publicId: result.public_id,
+      width: result.width,
+      height: result.height,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Background removal upload failed',
+      details: (error as Error).message,
+    });
+  }
+});
+
+// ---------------------------------------------------------
 // Product CRUD
 // ---------------------------------------------------------
 router.get('/products', async (req, res) => {
