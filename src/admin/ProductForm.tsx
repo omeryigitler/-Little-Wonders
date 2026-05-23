@@ -11,11 +11,28 @@ type UploadedImage = {
   publicId?: string;
 };
 
+type PromotionBadge = 'none' | 'featured' | 'newArrival' | 'bestseller';
+
 const CLOUD_STYLES = [
   { label: 'Blue', image: '/product-card-cloud-blue.png' },
   { label: 'Peach', image: '/product-card-cloud-peach.png' },
   { label: 'Mint', image: '/product-card-cloud-mint.png' },
 ];
+
+const TogglePill = ({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+      active ? 'border-gray-900 bg-gray-900 text-white' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400'
+    }`}
+  >
+    <span>{label}</span>
+    <span className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${active ? 'bg-white/30' : 'bg-gray-300'}`}>
+      <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform ${active ? 'translate-x-4' : 'translate-x-0.5'}`} />
+    </span>
+  </button>
+);
 
 export const ProductForm = () => {
   const navigate = useNavigate();
@@ -30,9 +47,7 @@ export const ProductForm = () => {
   const [sku, setSku] = useState('');
   const [stockQuantity, setStockQuantity] = useState('0');
   const [status, setStatus] = useState<'active' | 'draft'>('active');
-  const [featured, setFeatured] = useState(false);
-  const [newArrival, setNewArrival] = useState(false);
-  const [bestseller, setBestseller] = useState(false);
+  const [promotionBadge, setPromotionBadge] = useState<PromotionBadge>('none');
   const [ageRange, setAgeRange] = useState('');
   const [material, setMaterial] = useState('');
   const [careInstructions, setCareInstructions] = useState('');
@@ -59,9 +74,7 @@ export const ProductForm = () => {
         setSku(data.sku || '');
         setStockQuantity(String(data.stockQuantity ?? 0));
         setStatus(data.status === 'draft' ? 'draft' : 'active');
-        setFeatured(Boolean(data.featured));
-        setNewArrival(Boolean(data.newArrival));
-        setBestseller(Boolean(data.bestseller));
+        setPromotionBadge(data.bestseller ? 'bestseller' : data.newArrival ? 'newArrival' : data.featured ? 'featured' : 'none');
         setAgeRange(data.ageRange || '');
         setMaterial(data.material || '');
         setCareInstructions(data.careInstructions || '');
@@ -86,7 +99,7 @@ export const ProductForm = () => {
     price: Number(price) || 0,
     imageUrl: images[0].url,
     bgImage,
-    badge: bestseller ? 'Bestseller' : newArrival ? 'New' : undefined,
+    badge: promotionBadge === 'bestseller' ? 'Bestseller' : promotionBadge === 'newArrival' ? 'New' : undefined,
     personalizationRequired,
   } : null;
 
@@ -112,9 +125,9 @@ export const ProductForm = () => {
           sku: sku.trim(),
           stockQuantity: Number(stockQuantity) || 0,
           status,
-          featured,
-          newArrival,
-          bestseller,
+          featured: promotionBadge === 'featured',
+          newArrival: promotionBadge === 'newArrival',
+          bestseller: promotionBadge === 'bestseller',
           ageRange: ageRange.trim(),
           material: material.trim(),
           careInstructions: careInstructions.trim(),
@@ -190,13 +203,15 @@ export const ProductForm = () => {
             <h2 className="text-lg font-medium text-gray-900">Organization</h2>
             <select value={status} onChange={(e) => setStatus(e.target.value as 'active' | 'draft')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"><option value="active">Active</option><option value="draft">Draft</option></select>
             <div className="space-y-2 rounded-lg bg-gray-50 p-3">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700"><input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} /> Featured</label>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700"><input type="checkbox" checked={newArrival} onChange={(e) => setNewArrival(e.target.checked)} /> New arrival</label>
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700"><input type="checkbox" checked={bestseller} onChange={(e) => setBestseller(e.target.checked)} /> Bestseller</label>
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Promotion badge</p>
+              <TogglePill active={promotionBadge === 'none'} label="None" onClick={() => setPromotionBadge('none')} />
+              <TogglePill active={promotionBadge === 'featured'} label="Featured" onClick={() => setPromotionBadge('featured')} />
+              <TogglePill active={promotionBadge === 'newArrival'} label="New arrival" onClick={() => setPromotionBadge('newArrival')} />
+              <TogglePill active={promotionBadge === 'bestseller'} label="Bestseller" onClick={() => setPromotionBadge('bestseller')} />
             </div>
             <div className="grid grid-cols-3 gap-2">{CLOUD_STYLES.map((style) => <button key={style.image} type="button" onClick={() => setBgImage(style.image)} className={`rounded-lg border p-2 ${style.image === bgImage ? 'border-gray-900 bg-gray-50' : 'border-gray-200 bg-white'}`}><img src={style.image} className="aspect-[1.6/1] w-full object-fill" alt="" /><span className="mt-1 block text-center text-[11px] font-medium text-gray-700">{style.label}</span></button>)}</div>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between"><div><h2 className="font-medium text-gray-900 text-sm">Personalization</h2><p className="text-xs text-gray-500">Enable custom fields for this product.</p></div><input type="checkbox" checked={personalizationRequired} onChange={(e) => setPersonalizationRequired(e.target.checked)} /></div>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between"><div><h2 className="font-medium text-gray-900 text-sm">Personalization</h2><p className="text-xs text-gray-500">Enable custom fields for this product.</p></div><button type="button" onClick={() => setPersonalizationRequired(!personalizationRequired)} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${personalizationRequired ? 'bg-gray-900' : 'bg-gray-300'}`}><span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition-transform ${personalizationRequired ? 'translate-x-5' : 'translate-x-0.5'}`} /></button></div>
         </div>
       </div>
     </div>
