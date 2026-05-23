@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Storefront from './Storefront';
 import { AdminLayout } from './admin/AdminLayout';
+import { AdminDashboard } from './admin/AdminDashboard';
 import { AdminProducts } from './admin/AdminProducts';
 import { ProductForm } from './admin/ProductForm';
 import { PersonalizationTemplateManager } from './admin/PersonalizationTemplateManager';
@@ -14,7 +15,7 @@ export default function App() {
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<div className="text-gray-500 font-medium h-full flex items-center justify-center">Dashboard coming soon...</div>} />
+          <Route index element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="products/new" element={<ProductForm />} />
           <Route path="products/:id/edit" element={<ProductForm />} />
