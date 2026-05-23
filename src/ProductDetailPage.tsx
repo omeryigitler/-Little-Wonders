@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, Sparkles } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { CartDrawer } from './components/CartDrawer';
 import { PersonalizationModal } from './components/PersonalizationModal';
 import { useStore } from './store/useStore';
@@ -15,6 +15,7 @@ export default function ProductDetailPage() {
     addToCart,
     openCart,
   } = useStore();
+  const [showSkipModal, setShowSkipModal] = useState(false);
 
   useEffect(() => {
     loadProducts();
@@ -24,6 +25,18 @@ export default function ProductDetailPage() {
     return products.find((item) => item.slug === slug || item.id === slug);
   }, [products, slug]);
 
+  const addProductWithoutPersonalization = () => {
+    if (!product) return;
+
+    addToCart({
+      product,
+      quantity: 1,
+      personalizationData: {},
+    });
+    setShowSkipModal(false);
+    openCart();
+  };
+
   const handlePrimaryAction = () => {
     if (!product) return;
 
@@ -32,12 +45,7 @@ export default function ProductDetailPage() {
       return;
     }
 
-    addToCart({
-      product,
-      quantity: 1,
-      personalizationData: {},
-    });
-    openCart();
+    addProductWithoutPersonalization();
   };
 
   return (
@@ -45,6 +53,34 @@ export default function ProductDetailPage() {
       <CartDrawer />
       <PersonalizationModal />
       <div className="fixed inset-0 pointer-events-none z-0 opacity-40 bg-pattern bg-[length:400px_400px]"></div>
+
+      {showSkipModal && product && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3a251a]/25 px-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-[2rem] border border-boutique-brown/10 bg-[#fcfaf6] p-7 text-center shadow-2xl">
+            <button onClick={() => setShowSkipModal(false)} className="absolute right-4 top-4 rounded-full p-2 text-boutique-brown-light hover:bg-boutique-wood/10">
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-boutique-bg text-boutique-brown">
+              <Sparkles className="h-7 w-7" />
+            </div>
+
+            <h2 className="font-serif text-3xl text-boutique-brown">Continue Without Personalization?</h2>
+            <p className="mt-3 text-sm leading-relaxed text-boutique-brown-light">
+              Are you sure you want to add <span className="font-semibold text-boutique-brown">{product.name}</span> without custom details?
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3">
+              <button onClick={addProductWithoutPersonalization} className="rounded-full bg-boutique-brown px-5 py-3 text-sm font-bold text-white hover:bg-boutique-wood">
+                Yes, Continue
+              </button>
+              <button onClick={() => setShowSkipModal(false)} className="rounded-full border border-boutique-brown/15 bg-white px-5 py-3 text-sm font-bold text-boutique-brown hover:bg-boutique-bg">
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <header className="relative z-20 flex items-center justify-between border-b border-boutique-brown/10 bg-boutique-bg/80 px-6 py-5 backdrop-blur-md md:px-12">
         <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-boutique-brown-light hover:text-boutique-brown">
@@ -110,13 +146,25 @@ export default function ProductDetailPage() {
                 </div>
               )}
 
-              <button
-                type="button"
-                onClick={handlePrimaryAction}
-                className="mt-8 w-full rounded-full bg-boutique-brown px-6 py-4 text-base font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-boutique-wood"
-              >
-                {product.personalizationRequired ? 'Personalize This Gift' : 'Add to Cart'}
-              </button>
+              <div className="mt-8 flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={handlePrimaryAction}
+                  className="w-full rounded-full bg-boutique-brown px-6 py-4 text-base font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-boutique-wood"
+                >
+                  {product.personalizationRequired ? 'Personalize This Gift' : 'Add to Cart'}
+                </button>
+
+                {product.personalizationRequired && (
+                  <button
+                    type="button"
+                    onClick={() => setShowSkipModal(true)}
+                    className="w-full rounded-full border border-boutique-brown/15 bg-white px-6 py-4 text-base font-bold text-boutique-brown shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-boutique-bg"
+                  >
+                    Buy Without Personalization
+                  </button>
+                )}
+              </div>
             </section>
           </div>
         )}
