@@ -35,7 +35,7 @@ const uniqueSlug = async (name: string) => {
   return slug;
 };
 
-const mapProductForStorefront = (product: any) => {
+const mapProductForAdmin = (product: any) => {
   const primaryImage =
     product.images?.find((image: any) => image.is_primary) ||
     product.images?.[0];
@@ -46,18 +46,23 @@ const mapProductForStorefront = (product: any) => {
     slug: product.slug,
     description: product.description || '',
     price: Number(product.price),
+    salePrice: product.sale_price ? Number(product.sale_price) : null,
+    sku: product.sku || '',
+    stockQuantity: product.stock_quantity || 0,
     imageUrl: primaryImage?.image_url || '',
-    bgImage:
-      product.card_bg_image ||
-      product.sku ||
-      '/product-card-cloud-blue.png',
-    badge: product.bestseller
-      ? 'Bestseller'
-      : product.new_arrival
-        ? 'New'
-        : undefined,
+    publicId: primaryImage?.public_id || '',
+    bgImage: product.card_bg_image || '/product-card-cloud-blue.png',
+    badge: product.bestseller ? 'Bestseller' : product.new_arrival ? 'New' : undefined,
     personalizationRequired: product.personalization_required,
     status: product.status,
+    featured: product.featured,
+    newArrival: product.new_arrival,
+    bestseller: product.bestseller,
+    genderTag: product.gender_tag || '',
+    ageRange: product.age_range || '',
+    material: product.material || '',
+    careInstructions: product.care_instructions || '',
+    preparationTime: product.preparation_time || '',
   };
 };
 
@@ -78,7 +83,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         orderBy: { created_at: 'desc' },
       });
 
-      return res.status(200).json(products.map(mapProductForStorefront));
+      return res.status(200).json(products.map(mapProductForAdmin));
     } catch (error) {
       return res.status(500).json({
         error: 'Failed to fetch admin products',
@@ -93,13 +98,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         name,
         description,
         price,
+        salePrice,
         imageUrl,
         publicId,
         bgImage,
+        sku,
         status = 'active',
         personalizationRequired = true,
         stockQuantity = 0,
         categoryId,
+        featured = false,
+        newArrival = false,
+        bestseller = false,
+        genderTag,
+        ageRange,
+        material,
+        careInstructions,
+        preparationTime,
       } = req.body;
 
       if (!name || !price || !imageUrl) {
@@ -116,11 +131,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           slug,
           description,
           price,
-          sku: bgImage || '/product-card-cloud-blue.png',
+          sale_price: salePrice ? Number(salePrice) : null,
+          sku: sku || null,
           card_bg_image: bgImage || '/product-card-cloud-blue.png',
           category_id: categoryId || null,
           stock_quantity: Number(stockQuantity) || 0,
           status,
+          featured: Boolean(featured),
+          new_arrival: Boolean(newArrival),
+          bestseller: Boolean(bestseller),
+          gender_tag: genderTag || null,
+          age_range: ageRange || null,
+          material: material || null,
+          care_instructions: careInstructions || null,
+          preparation_time: preparationTime || null,
           personalization_required: Boolean(personalizationRequired),
           images: {
             create: [
@@ -140,7 +164,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         },
       });
 
-      return res.status(201).json(mapProductForStorefront(product));
+      return res.status(201).json(mapProductForAdmin(product));
     } catch (error) {
       return res.status(400).json({
         error: 'Failed to create product',
