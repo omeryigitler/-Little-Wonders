@@ -6,11 +6,22 @@ export type Product = {
   slug?: string;
   description: string;
   price: number;
+  salePrice?: number | null;
   imageUrl: string;
   bgImage?: string;
   badge?: string;
   personalizationRequired?: boolean;
   status?: string;
+  sku?: string;
+  stockQuantity?: number;
+  featured?: boolean;
+  newArrival?: boolean;
+  bestseller?: boolean;
+  genderTag?: string;
+  ageRange?: string;
+  material?: string;
+  careInstructions?: string;
+  preparationTime?: string;
 };
 
 export type CartItem = {
