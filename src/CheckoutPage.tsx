@@ -1,9 +1,19 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, CreditCard, Lock, ShieldCheck, ShoppingBag, WalletCards } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, CreditCard, Lock, ShieldCheck, ShoppingBag, WalletCards, Zap } from 'lucide-react';
 import { useStore } from './store/useStore';
 
 type PaymentMethod = 'stripe' | 'paypal';
+
+const WalletBadge = ({ label, tone = 'light' }: { label: string; tone?: 'dark' | 'light' | 'blue' }) => {
+  const toneClass = tone === 'dark'
+    ? 'bg-neutral-950 text-white border-neutral-950'
+    : tone === 'blue'
+      ? 'bg-[#f2f7ff] text-[#1434cb] border-[#d7e5ff]'
+      : 'bg-white text-boutique-brown border-boutique-brown/10';
+
+  return <span className={`inline-flex h-9 items-center rounded-xl border px-3 text-[11px] font-black tracking-tight shadow-sm ${toneClass}`}>{label}</span>;
+};
 
 export default function CheckoutPage() {
   const { cartItems } = useStore();
@@ -152,68 +162,68 @@ export default function CheckoutPage() {
           <section className="space-y-4">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-sm font-bold uppercase tracking-wider text-boutique-brown">Payment method</h2>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-[11px] font-bold text-green-800">
-                <ShieldCheck className="h-3.5 w-3.5" /> Secure
-              </div>
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-[11px] font-bold text-green-800"><ShieldCheck className="h-3.5 w-3.5" /> Secure</div>
             </div>
 
             <div className="grid gap-3">
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentMethod('stripe')}
-                className={`group relative overflow-hidden rounded-[1.4rem] border p-4 text-left transition-all ${selectedPaymentMethod === 'stripe' ? 'border-boutique-brown bg-[#fffaf3] shadow-sm ring-2 ring-boutique-brown/10' : 'border-boutique-brown/10 bg-white/80 hover:border-boutique-brown/25'}`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${selectedPaymentMethod === 'stripe' ? 'bg-boutique-brown text-white' : 'bg-boutique-bg text-boutique-brown'}`}>
-                    <CreditCard className="h-5 w-5" />
-                  </div>
+              <button type="button" onClick={() => setSelectedPaymentMethod('stripe')} className={`group relative overflow-hidden rounded-[1.55rem] border p-4 text-left transition-all ${selectedPaymentMethod === 'stripe' ? 'border-boutique-brown bg-[#fffaf3] shadow-sm ring-2 ring-boutique-brown/10' : 'border-boutique-brown/10 bg-white/80 hover:border-boutique-brown/25'}`}>
+                <div className="absolute right-4 top-4 rounded-full border border-[#635bff]/15 bg-white px-3 py-1 text-[11px] font-black text-[#635bff] shadow-sm">stripe</div>
+                <div className="flex items-start gap-4 pr-16">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${selectedPaymentMethod === 'stripe' ? 'bg-boutique-brown text-white' : 'bg-boutique-bg text-boutique-brown'}`}><CreditCard className="h-5 w-5" /></div>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-bold text-boutique-brown">Card / Apple Pay / Google Pay / Link</p>
+                      <p className="font-bold text-boutique-brown">Card & digital wallets</p>
                       <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-boutique-brown-light shadow-sm">Primary</span>
                     </div>
-                    <p className="mt-1 text-sm leading-relaxed text-boutique-brown-light">Fast, secure checkout powered by Stripe. Wallet options appear automatically when available.</p>
-                    <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-bold text-boutique-brown-light">
-                      <span className="rounded-full bg-white px-3 py-1 shadow-sm">Card</span>
-                      <span className="rounded-full bg-white px-3 py-1 shadow-sm">Apple Pay</span>
-                      <span className="rounded-full bg-white px-3 py-1 shadow-sm">Google Pay</span>
-                      <span className="rounded-full bg-white px-3 py-1 shadow-sm">Link</span>
+                    <p className="mt-1 text-sm leading-relaxed text-boutique-brown-light">Secure hosted checkout. Apple Pay, Google Pay, and Link appear automatically when the customer device and browser support them.</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <WalletBadge label="VISA" tone="blue" />
+                      <WalletBadge label="mastercard" />
+                      <WalletBadge label=" Pay" tone="dark" />
+                      <WalletBadge label="G Pay" />
+                      <WalletBadge label="Link" tone="blue" />
+                    </div>
+                    <div className="mt-3 flex items-center gap-2 rounded-2xl bg-white/80 px-3 py-2 text-xs text-boutique-brown-light shadow-sm">
+                      <Zap className="h-3.5 w-3.5 text-boutique-brown" /> Demo wallet badges shown here; real wallet buttons are rendered inside Stripe Checkout when available.
                     </div>
                   </div>
                   {selectedPaymentMethod === 'stripe' && <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-700" />}
                 </div>
               </button>
 
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentMethod('paypal')}
-                className={`group relative overflow-hidden rounded-[1.4rem] border p-4 text-left transition-all ${selectedPaymentMethod === 'paypal' ? 'border-[#003087] bg-[#fff8df] shadow-sm ring-2 ring-[#003087]/10' : 'border-boutique-brown/10 bg-white/80 hover:border-[#003087]/30'}`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${selectedPaymentMethod === 'paypal' ? 'bg-[#ffc439] text-[#003087]' : 'bg-boutique-bg text-boutique-brown'}`}>
-                    <WalletCards className="h-5 w-5" />
-                  </div>
+              <button type="button" onClick={() => setSelectedPaymentMethod('paypal')} className={`group relative overflow-hidden rounded-[1.55rem] border p-4 text-left transition-all ${selectedPaymentMethod === 'paypal' ? 'border-[#003087] bg-[#fff8df] shadow-sm ring-2 ring-[#003087]/10' : 'border-boutique-brown/10 bg-white/80 hover:border-[#003087]/30'}`}>
+                <div className="absolute right-4 top-4 rounded-full bg-[#003087] px-3 py-1 text-[11px] font-black text-white shadow-sm">PayPal</div>
+                <div className="flex items-start gap-4 pr-20">
+                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${selectedPaymentMethod === 'paypal' ? 'bg-[#ffc439] text-[#003087]' : 'bg-boutique-bg text-boutique-brown'}`}><WalletCards className="h-5 w-5" /></div>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-bold text-boutique-brown">PayPal</p>
+                      <p className="font-bold text-boutique-brown">PayPal protected checkout</p>
                       <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-boutique-brown-light shadow-sm">Secondary</span>
                     </div>
-                    <p className="mt-1 text-sm leading-relaxed text-boutique-brown-light">Use your PayPal account for a familiar checkout experience.</p>
-                    <div className="mt-3 inline-flex rounded-full bg-[#ffc439] px-3 py-1 text-[11px] font-black text-[#003087] shadow-sm">PayPal checkout</div>
+                    <p className="mt-1 text-sm leading-relaxed text-boutique-brown-light">Customers can sign in to PayPal and complete payment on PayPal’s secure hosted page.</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <WalletBadge label="PayPal" tone="blue" />
+                      <WalletBadge label="Buyer protection" />
+                      <WalletBadge label="Hosted checkout" />
+                    </div>
                   </div>
                   {selectedPaymentMethod === 'paypal' && <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-700" />}
                 </div>
               </button>
             </div>
+
+            <div className="rounded-[1.35rem] border border-boutique-brown/10 bg-white/80 p-4 shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-green-50 text-green-800"><ShieldCheck className="h-5 w-5" /></div>
+                <div>
+                  <p className="text-sm font-bold text-boutique-brown">Selected: {selectedPaymentMethod === 'paypal' ? 'PayPal' : 'Stripe card & wallets'}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-boutique-brown-light">Little Wonders never stores card numbers, wallet credentials, or PayPal login details. Payment is completed on the selected provider’s secure checkout.</p>
+                </div>
+              </div>
+            </div>
           </section>
 
-          <div className="rounded-2xl border border-boutique-brown/10 bg-[#fffaf3] p-4 text-xs leading-relaxed text-boutique-brown-light">
-            Your payment details are processed securely by the selected provider. Little Wonders does not store card or PayPal credentials.
-          </div>
-
-          <button disabled={isSubmitting || cartItems.length === 0} className={`w-full rounded-full px-6 py-4 text-base font-bold shadow-sm transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 ${selectedPaymentMethod === 'paypal' ? 'bg-[#ffc439] text-[#003087] hover:bg-[#f7b820]' : 'bg-boutique-brown text-white hover:bg-boutique-wood'}`}>
-            {buttonLabel}
-          </button>
+          <button disabled={isSubmitting || cartItems.length === 0} className={`w-full rounded-full px-6 py-4 text-base font-bold shadow-sm transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 ${selectedPaymentMethod === 'paypal' ? 'bg-[#ffc439] text-[#003087] hover:bg-[#f7b820]' : 'bg-boutique-brown text-white hover:bg-boutique-wood'}`}>{buttonLabel}</button>
         </form>
 
         <aside className="rounded-[2rem] border border-boutique-brown/10 bg-white/75 p-6 shadow-sm md:p-8 h-fit">
