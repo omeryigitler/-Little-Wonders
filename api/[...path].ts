@@ -8,22 +8,13 @@ import apiRoutes from '../server/api.js';
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(
-  express.json({
-    limit: '25mb',
-  })
-);
+app.use(express.json({ limit: '25mb' }));
 
-const getPayPalBaseUrl = () => {
-  return process.env.PAYPAL_ENV === 'live'
-    ? 'https://api-m.paypal.com'
-    : 'https://api-m.sandbox.paypal.com';
-};
+const getPayPalBaseUrl = () => process.env.PAYPAL_ENV === 'live' ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com';
 
 const getBaseUrl = (req: express.Request) => {
   const configuredUrl = process.env.PUBLIC_SITE_URL?.replace(/\/$/, '');
   if (configuredUrl) return configuredUrl;
-
   const host = req.headers['x-forwarded-host'] || req.headers.host;
   const protocol = req.headers['x-forwarded-proto'] || 'https';
   return `${protocol}://${host}`;
@@ -46,23 +37,16 @@ const getPayPalAccessToken = async () => {
   const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
   const response = await fetch(`${getPayPalBaseUrl()}/v1/oauth2/token`, {
     method: 'POST',
-    headers: {
-      Authorization: `Basic ${credentials}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
+    headers: { Authorization: `Basic ${credentials}`, 'Content-Type': 'application/x-www-form-urlencoded' },
     body: 'grant_type=client_credentials',
   });
 
   const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error_description || data.error || 'PayPal access token could not be created.');
-  }
-
+  if (!response.ok) throw new Error(data.error_description || data.error || 'PayPal access token could not be created.');
   return data.access_token as string;
 };
 
-app.post('/api/paypal/create-order', async (req, res) => {
+const createPayPalOrderHandler = async (req: express.Request, res: express.Response) => {
   try {
     const { customer, items, subtotal, shipping, total, currency = 'USD' } = req.body;
 
@@ -103,40 +87,26 @@ app.post('/api/paypal/create-order', async (req, res) => {
     const accessToken = await getPayPalAccessToken();
     const response = await fetch(`${getPayPalBaseUrl()}/v2/checkout/orders`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         intent: 'CAPTURE',
-        purchase_units: [
-          {
-            reference_id: order.order_number,
-            description: `Little Wonders order ${order.order_number}`,
-            amount: {
-              currency_code: String(currency).toUpperCase(),
-              value: Number(total || 0).toFixed(2),
-              breakdown: {
-                item_total: {
-                  currency_code: String(currency).toUpperCase(),
-                  value: Number(subtotal || 0).toFixed(2),
-                },
-                shipping: {
-                  currency_code: String(currency).toUpperCase(),
-                  value: Number(shipping || 0).toFixed(2),
-                },
-              },
+        purchase_units: [{
+          reference_id: order.order_number,
+          description: `Little Wonders order ${order.order_number}`,
+          amount: {
+            currency_code: String(currency).toUpperCase(),
+            value: Number(total || 0).toFixed(2),
+            breakdown: {
+              item_total: { currency_code: String(currency).toUpperCase(), value: Number(subtotal || 0).toFixed(2) },
+              shipping: { currency_code: String(currency).toUpperCase(), value: Number(shipping || 0).toFixed(2) },
             },
-            items: items.map((item: any) => ({
-              name: String(item.name).slice(0, 127),
-              quantity: String(Number(item.quantity) || 1),
-              unit_amount: {
-                currency_code: String(currency).toUpperCase(),
-                value: Number(item.price || 0).toFixed(2),
-              },
-            })),
           },
-        ],
+          items: items.map((item: any) => ({
+            name: String(item.name).slice(0, 127),
+            quantity: String(Number(item.quantity) || 1),
+            unit_amount: { currency_code: String(currency).toUpperCase(), value: Number(item.price || 0).toFixed(2) },
+          })),
+        }],
         payment_source: {
           paypal: {
             experience_context: {
@@ -153,80 +123,47 @@ app.post('/api/paypal/create-order', async (req, res) => {
     });
 
     const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || data.name || 'PayPal order could not be created.');
-    }
+    if (!response.ok) throw new Error(data.message || data.name || 'PayPal order could not be created.');
 
     const approvalUrl = data.links?.find((link: any) => link.rel === 'payer-action' || link.rel === 'approve')?.href;
+    await prisma.orders.update({ where: { id: order.id }, data: { payment_reference: data.id } });
 
-    await prisma.orders.update({
-      where: { id: order.id },
-      data: { payment_reference: data.id },
-    });
-
-    return res.status(200).json({
-      success: true,
-      orderId: order.order_number,
-      databaseId: order.id,
-      paypalOrderId: data.id,
-      approvalUrl,
-    });
+    return res.status(200).json({ success: true, orderId: order.order_number, databaseId: order.id, paypalOrderId: data.id, approvalUrl });
   } catch (error) {
-    return res.status(500).json({
-      error: 'PayPal checkout failed',
-      details: (error as Error).message,
-    });
+    return res.status(500).json({ error: 'PayPal checkout failed', details: (error as Error).message });
   }
-});
+};
 
-app.post('/api/paypal/capture-order', async (req, res) => {
+const capturePayPalOrderHandler = async (req: express.Request, res: express.Response) => {
   try {
     const { token, orderNumber } = req.body;
-
-    if (!token || !orderNumber) {
-      return res.status(400).json({ error: 'Missing PayPal token or order reference.' });
-    }
+    if (!token || !orderNumber) return res.status(400).json({ error: 'Missing PayPal token or order reference.' });
 
     const accessToken = await getPayPalAccessToken();
     const response = await fetch(`${getPayPalBaseUrl()}/v2/checkout/orders/${encodeURIComponent(token)}/capture`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
     });
 
     const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || data.name || 'PayPal payment could not be captured.');
-    }
+    if (!response.ok) throw new Error(data.message || data.name || 'PayPal payment could not be captured.');
 
     const isCompleted = data.status === 'COMPLETED';
-
     await prisma.orders.update({
       where: { order_number: orderNumber },
-      data: {
-        payment_status: isCompleted ? 'paid' : 'pending',
-        order_status: 'processing',
-        payment_reference: data.id || token,
-      },
+      data: { payment_status: isCompleted ? 'paid' : 'pending', order_status: 'processing', payment_reference: data.id || token },
     });
 
-    return res.status(200).json({
-      success: true,
-      status: data.status,
-      orderNumber,
-      paypalOrderId: data.id || token,
-    });
+    return res.status(200).json({ success: true, status: data.status, orderNumber, paypalOrderId: data.id || token });
   } catch (error) {
-    return res.status(500).json({
-      error: 'PayPal capture failed',
-      details: (error as Error).message,
-    });
+    return res.status(500).json({ error: 'PayPal capture failed', details: (error as Error).message });
   }
-});
+};
+
+app.post('/api/paypal/create-order', createPayPalOrderHandler);
+app.post('/api/paypal-create-order', createPayPalOrderHandler);
+app.post('/api/paypal/capture-order', capturePayPalOrderHandler);
+app.post('/api/paypal-capture-order', capturePayPalOrderHandler);
 
 app.use('/api', apiRoutes);
 
