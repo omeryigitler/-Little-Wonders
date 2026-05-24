@@ -1,8 +1,35 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, Edit, Trash } from 'lucide-react';
+import { Edit, Package, Plus, RefreshCcw, Search, Sparkles, Star, Tags, Trash, Wand2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Product } from '../store/useStore';
 import { getAdminToken } from './adminAuth';
+
+const StatCard = ({ title, value, note, icon: Icon }: { title: string; value: string | number; note: string; icon: React.ComponentType<{ className?: string }> }) => (
+  <div className="relative overflow-hidden rounded-[1.7rem] border border-boutique-brown/10 bg-white/80 p-5 shadow-[0_16px_40px_rgba(58,37,26,0.07)] backdrop-blur-sm">
+    <img src="/cloud-watercolor-blue-light.png" className="pointer-events-none absolute -right-8 -top-10 w-32 opacity-25 mix-blend-multiply" alt="" />
+    <div className="relative z-10 flex items-start justify-between gap-4">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-boutique-brown/55">{title}</p>
+        <p className="mt-4 font-serif text-4xl leading-none text-boutique-brown">{value}</p>
+        <p className="mt-2 text-xs text-boutique-brown-light">{note}</p>
+      </div>
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fff4df] text-boutique-brown shadow-sm"><Icon className="h-5 w-5" /></div>
+    </div>
+  </div>
+);
+
+const StatusBadge = ({ status }: { status?: string }) => {
+  const value = status || 'active';
+  const classes = value === 'draft'
+    ? 'bg-gray-100 text-gray-700 border-gray-200'
+    : 'bg-green-100 text-green-800 border-green-200';
+
+  return <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold ${classes}`}>{value}</span>;
+};
+
+const FeatureBadge = ({ children }: { children: React.ReactNode }) => (
+  <span className="inline-flex rounded-full border border-boutique-brown/10 bg-white px-2.5 py-1 text-[11px] font-bold text-boutique-brown-light shadow-sm">{children}</span>
+);
 
 export const AdminProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -14,17 +41,10 @@ export const AdminProducts = () => {
 
     try {
       const token = getAdminToken();
-      const response = await fetch('/api/admin/products', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await fetch('/api/admin/products', { headers: { Authorization: `Bearer ${token}` } });
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.details || data.error || 'Could not load products.');
-      }
+      if (!response.ok) throw new Error(data.details || data.error || 'Could not load products.');
 
       setProducts(data);
     } catch (error) {
@@ -37,23 +57,14 @@ export const AdminProducts = () => {
 
   const handleDelete = async (product: Product) => {
     const confirmed = window.confirm(`Delete ${product.name}? This action cannot be undone.`);
-
     if (!confirmed) return;
 
     try {
       const token = getAdminToken();
-      const response = await fetch(`/api/admin/products/${product.id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const response = await fetch(`/api/admin/products/${product.id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.details || data.error || 'Could not delete product.');
-      }
+      if (!response.ok) throw new Error(data.details || data.error || 'Could not delete product.');
 
       setProducts((currentProducts) => currentProducts.filter((item) => item.id !== product.id));
     } catch (error) {
@@ -64,103 +75,100 @@ export const AdminProducts = () => {
 
   const filteredProducts = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
-
     if (!query) return products;
 
-    return products.filter((product) => {
-      return (
-        product.name.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query) ||
-        String(product.status || '').toLowerCase().includes(query)
-      );
-    });
+    return products.filter((product) => product.name.toLowerCase().includes(query) || product.description.toLowerCase().includes(query) || String(product.status || '').toLowerCase().includes(query));
   }, [products, searchTerm]);
 
-  useEffect(() => {
-    loadProducts();
-  }, []);
+  useEffect(() => { loadProducts(); }, []);
+
+  const activeProducts = products.filter((product) => (product.status || 'active') !== 'draft').length;
+  const draftProducts = products.filter((product) => product.status === 'draft').length;
+  const personalizedProducts = products.filter((product: any) => product.personalizationEnabled || product.personalizationFields?.length > 0).length;
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage your boutique products and inventory.</p>
+    <div className="space-y-8">
+      <div className="relative overflow-hidden rounded-[2rem] border border-boutique-brown/10 bg-white/78 p-7 shadow-[0_20px_55px_rgba(58,37,26,0.08)] backdrop-blur-sm">
+        <img src="/cloud-watercolor-pink.png" className="pointer-events-none absolute -right-12 -top-14 w-64 opacity-30 mix-blend-multiply" alt="" />
+        <img src="/toy-abc-blocks.png" className="pointer-events-none absolute right-12 bottom-5 w-16 -rotate-6 opacity-35 mix-blend-multiply" alt="" />
+        <div className="relative z-10 flex items-center justify-between gap-6">
+          <div>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-[#fffaf3] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-boutique-brown-light">
+              <Sparkles className="h-4 w-4" /> Product studio
+            </div>
+            <h1 className="font-serif text-5xl leading-none text-boutique-brown">Products</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">Manage Little Wonders gifts, product images, pricing, visibility, and personalization readiness.</p>
+          </div>
+          <Link to="/admin/products/new" className="inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-boutique-brown px-5 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-boutique-wood">
+            <Plus className="h-4 w-4" /> Add Product
+          </Link>
         </div>
-        <Link to="/admin/products/new" className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Add Product
-        </Link>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-          <div className="relative">
-            <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search products..."
-              className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:bg-white transition-all w-64"
-            />
+      <div className="grid gap-4 md:grid-cols-3">
+        <StatCard title="Total Products" value={isLoading ? '—' : products.length} icon={Package} note="All gifts in the catalog" />
+        <StatCard title="Active" value={isLoading ? '—' : activeProducts} icon={Star} note="Visible products ready to sell" />
+        <StatCard title="Draft / Personalized" value={isLoading ? '—' : `${draftProducts} / ${personalizedProducts}`} icon={Wand2} note="Drafts and custom gifts" />
+      </div>
+
+      <div className="overflow-hidden rounded-[2rem] border border-boutique-brown/10 bg-white/82 shadow-[0_20px_55px_rgba(58,37,26,0.08)] backdrop-blur-sm">
+        <div className="flex items-center justify-between gap-4 border-b border-boutique-brown/10 p-5">
+          <div className="relative max-w-sm flex-1">
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-boutique-brown/35" />
+            <input type="text" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Search products..." className="w-full rounded-2xl border border-boutique-brown/10 bg-[#fffaf3] py-3 pl-12 pr-4 text-sm text-boutique-brown outline-none transition-all placeholder:text-boutique-brown/45 focus:ring-2 focus:ring-boutique-wood/25" />
           </div>
-          <button onClick={loadProducts} className="border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 hover:bg-gray-100 text-sm">
-            Refresh
+          <button onClick={loadProducts} disabled={isLoading} className="inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-white px-4 py-3 text-sm font-bold text-boutique-brown shadow-sm hover:bg-[#fff4df] disabled:opacity-50">
+            <RefreshCcw className="h-4 w-4" /> Refresh
           </button>
         </div>
 
-        <table className="w-full text-left border-collapse">
+        <table className="w-full border-collapse text-left">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500">
-              <th className="px-6 py-3 font-medium">Product</th>
-              <th className="px-6 py-3 font-medium">Status</th>
-              <th className="px-6 py-3 font-medium">Cloud</th>
-              <th className="px-6 py-3 font-medium">Price</th>
-              <th className="px-6 py-3 font-medium text-right">Actions</th>
+            <tr className="border-b border-boutique-brown/10 bg-[#fffaf3]/70 text-xs uppercase tracking-[0.14em] text-boutique-brown/55">
+              <th className="px-6 py-4 font-bold">Product</th>
+              <th className="px-6 py-4 font-bold">Status</th>
+              <th className="px-6 py-4 font-bold">Design cloud</th>
+              <th className="px-6 py-4 font-bold">Price</th>
+              <th className="px-6 py-4 text-right font-bold">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 text-sm">
-            {isLoading && (
-              <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">Loading products...</td>
-              </tr>
-            )}
-
-            {!isLoading && filteredProducts.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">No products found.</td>
-              </tr>
-            )}
-
+          <tbody className="divide-y divide-boutique-brown/10 text-sm">
+            {isLoading && <tr><td colSpan={5} className="px-6 py-10 text-center text-boutique-brown-light">Loading products...</td></tr>}
+            {!isLoading && filteredProducts.length === 0 && <tr><td colSpan={5} className="px-6 py-10 text-center text-boutique-brown-light">No products found.</td></tr>}
             {!isLoading && filteredProducts.map((product) => (
-              <tr key={product.id} className="hover:bg-gray-50 group">
+              <tr key={product.id} className="transition-colors hover:bg-[#fffaf3]/70">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                      <img src={product.imageUrl} className="w-full h-full object-cover" alt="" />
+                    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-[1.4rem] border border-boutique-brown/10 bg-[#fffaf3] shadow-sm">
+                      {product.bgImage && <img src={product.bgImage} className="absolute inset-0 h-full w-full object-cover opacity-40" alt="" />}
+                      <img src={product.imageUrl} className="relative z-10 h-full w-full object-contain p-2" alt="" />
                     </div>
-                    <div>
-                      <h3 className="font-medium text-gray-900">{product.name}</h3>
-                      <p className="text-gray-500 text-xs line-clamp-1">{product.description}</p>
+                    <div className="min-w-0">
+                      <h3 className="font-serif text-xl leading-tight text-boutique-brown">{product.name}</h3>
+                      <p className="mt-1 max-w-sm truncate text-xs text-boutique-brown-light">{product.description}</p>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {(product as any).featured && <FeatureBadge>Featured</FeatureBadge>}
+                        {(product as any).isNewArrival && <FeatureBadge>New arrival</FeatureBadge>}
+                        {(product as any).isBestseller && <FeatureBadge>Bestseller</FeatureBadge>}
+                        {((product as any).personalizationEnabled || (product as any).personalizationFields?.length > 0) && <FeatureBadge>Personalized</FeatureBadge>}
+                      </div>
                     </div>
                   </div>
                 </td>
+                <td className="px-6 py-4"><StatusBadge status={product.status} /></td>
                 <td className="px-6 py-4">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${product.status === 'draft' ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-800'}`}>
-                    {product.status || 'active'}
-                  </span>
+                  <div className="relative h-12 w-28 overflow-hidden rounded-2xl border border-boutique-brown/10 bg-[#fffaf3] shadow-sm">
+                    <img src={product.bgImage || '/product-card-cloud-blue.png'} className="h-full w-full object-cover opacity-80" alt="" />
+                  </div>
                 </td>
-                <td className="px-6 py-4 text-gray-600">
-                  <img src={product.bgImage || '/product-card-cloud-blue.png'} className="w-20 h-8 object-fill" alt="" />
-                </td>
-                <td className="px-6 py-4 text-gray-600">${product.price.toFixed(2)}</td>
+                <td className="px-6 py-4 font-bold text-boutique-brown">${product.price.toFixed(2)}</td>
                 <td className="px-6 py-4 text-right">
-                  <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Link to={`/admin/products/${product.id}/edit`} className="p-1.5 text-gray-400 hover:text-gray-900 rounded" aria-label={`Edit ${product.name}`}>
-                      <Edit className="w-4 h-4" />
+                  <div className="flex items-center justify-end gap-2">
+                    <Link to={`/admin/products/${product.id}/edit`} className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-boutique-brown/10 bg-white text-boutique-brown shadow-sm hover:bg-[#fff4df]" aria-label={`Edit ${product.name}`}>
+                      <Edit className="h-4 w-4" />
                     </Link>
-                    <button onClick={() => handleDelete(product)} className="p-1.5 text-gray-400 hover:text-red-600 rounded" aria-label={`Delete ${product.name}`}>
-                      <Trash className="w-4 h-4" />
+                    <button onClick={() => handleDelete(product)} className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-red-100 bg-white text-red-500 shadow-sm hover:bg-red-50" aria-label={`Delete ${product.name}`}>
+                      <Trash className="h-4 w-4" />
                     </button>
                   </div>
                 </td>
