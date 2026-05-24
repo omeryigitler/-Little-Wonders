@@ -24,6 +24,13 @@ const getBaseUrl = (req: VercelRequest) => {
   return `${protocol}://${host}`;
 };
 
+const getAbsoluteImageUrl = (imageUrl: string | undefined, baseUrl: string) => {
+  if (!imageUrl) return undefined;
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
+  if (imageUrl.startsWith('/')) return `${baseUrl}${imageUrl}`;
+  return undefined;
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -78,19 +85,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const baseUrl = getBaseUrl(req);
 
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item: any) => ({
-      quantity: Number(item.quantity) || 1,
-      price_data: {
-        currency: String(currency).toLowerCase(),
-        unit_amount: toCents(Number(item.price) || 0),
-        product_data: {
-          name: item.name,
-          metadata: {
-            productId: item.productId || '',
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item: any) => {
+      const productImage = getAbsoluteImageUrl(item.imageUrl, baseUrl);
+      return {
+        quantity: Number(item.quantity) || 1,
+        price_data: {
+          currency: String(currency).toLowerCase(),
+          unit_amount: toCents(Number(item.price) || 0),
+          product_data: {
+            name: item.name,
+            description: item.description || 'Personalized Little Wonders gift',
+            images: productImage ? [productImage] : undefined,
+            metadata: {
+              productId: item.productId || '',
+            },
           },
         },
-      },
-    }));
+      };
+    });
 
     if (Number(shipping) > 0) {
       lineItems.push({
@@ -98,7 +110,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         price_data: {
           currency: String(currency).toLowerCase(),
           unit_amount: toCents(Number(shipping) || 0),
-          product_data: { name: 'Shipping' },
+          product_data: { name: 'Gift-ready shipping' },
         },
       });
     }
@@ -111,6 +123,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       success_url: `${baseUrl}/payment-success?session_id={CHECKOUT_SESSION_ID}&order=${encodeURIComponent(order.order_number)}`,
       cancel_url: `${baseUrl}/payment-cancel?order=${encodeURIComponent(order.order_number)}`,
       payment_method_types: ['card'],
+      custom_text: {
+        submit: { message: 'Your personalized gift order will be prepared after payment confirmation.' },
+        shipping_address: { message: 'Please enter the delivery address for your Little Wonders gift.' },
+      },
       metadata: {
         orderId: order.id,
         orderNumber: order.order_number,
