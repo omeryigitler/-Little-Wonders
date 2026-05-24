@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
 import Stripe from 'stripe';
+import { sendPaymentConfirmedEmail } from '../_lib/email';
 
 export const config = {
   api: {
@@ -21,6 +22,31 @@ const readRawBody = async (req: VercelRequest) => {
   }
 
   return Buffer.concat(chunks);
+};
+
+const parseJson = (value?: string | null) => {
+  if (!value) return null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+};
+
+const sendConfirmationForOrder = async (order: any) => {
+  const snapshot = parseJson(order.personalization_data_json);
+  await sendPaymentConfirmedEmail({
+    to: order.customer_email,
+    customerName: order.customer_name,
+    orderNumber: order.order_number,
+    total: Number(order.total_amount) || 0,
+    paymentProvider: 'Stripe',
+    items: order.items?.map((item: any) => ({
+      productName: item.product_name_snapshot,
+      quantity: Number(item.quantity) || 1,
+      price: Number(item.price_snapshot) || 0,
+    })) || [],
+  });
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -47,24 +73,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const orderId = session.metadata?.orderId;
       const orderNumber = session.metadata?.orderNumber;
 
+      let updatedOrder = null;
+
       if (orderId) {
-        await prisma.orders.update({
+        updatedOrder = await prisma.orders.update({
           where: { id: orderId },
           data: {
             payment_status: 'paid',
             payment_reference: session.id,
             order_status: 'processing',
           },
+          include: { items: true },
         });
       } else if (orderNumber) {
-        await prisma.orders.update({
+        updatedOrder = await prisma.orders.update({
           where: { order_number: orderNumber },
           data: {
             payment_status: 'paid',
             payment_reference: session.id,
             order_status: 'processing',
           },
+          include: { items: true },
         });
+      }
+
+      if (updatedOrder) {
+        await sendConfirmationForOrder(updatedOrder);
       }
     }
 
