@@ -41,7 +41,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { customer, items, subtotal, shipping, total, currency = 'USD' } = req.body;
+    const { customer, items, subtotal, shipping, total, currency = 'USD', shippingMethod } = req.body;
 
     if (!customer?.name || !customer?.email || !customer?.address || !customer?.city || !customer?.state || !customer?.zip) {
       return res.status(400).json({ error: 'Missing customer shipping details.' });
@@ -51,11 +51,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Your gift bag is empty.' });
     }
 
+    const selectedShippingMethod = shippingMethod || {
+      id: 'us-standard',
+      label: 'Standard Shipping',
+      carrier: 'USPS',
+      service: 'Ground Advantage',
+      estimatedDelivery: '3-5 business days',
+      amount: Number(shipping) || 0,
+    };
+
     const orderNumber = createOrderNumber();
     const customerSnapshot = {
       customer,
       subtotal: Number(subtotal) || 0,
       shipping: Number(shipping) || 0,
+      shippingMethod: selectedShippingMethod,
       total: Number(total) || 0,
       currency,
     };
@@ -110,7 +120,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         price_data: {
           currency: String(currency).toLowerCase(),
           unit_amount: toCents(Number(shipping) || 0),
-          product_data: { name: 'Gift-ready shipping' },
+          product_data: {
+            name: selectedShippingMethod.label || 'Gift-ready shipping',
+            description: `${selectedShippingMethod.carrier || 'Carrier'} · ${selectedShippingMethod.service || 'Shipping service'} · ${selectedShippingMethod.estimatedDelivery || 'Delivery estimate'}`,
+          },
         },
       });
     }
@@ -130,11 +143,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       metadata: {
         orderId: order.id,
         orderNumber: order.order_number,
+        shippingMethod: selectedShippingMethod.id || 'us-standard',
       },
       payment_intent_data: {
         metadata: {
           orderId: order.id,
           orderNumber: order.order_number,
+          shippingMethod: selectedShippingMethod.id || 'us-standard',
         },
       },
     });
@@ -153,6 +168,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       currency: order.currency,
       subtotal: Number(subtotal) || 0,
       shipping: Number(shipping) || 0,
+      shippingMethod: selectedShippingMethod,
       total: Number(order.total_amount) || 0,
       message: 'Stripe Checkout session created.',
     });
