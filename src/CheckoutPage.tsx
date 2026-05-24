@@ -49,6 +49,8 @@ export default function CheckoutPage() {
     items: cartItems.map((item) => ({
       productId: item.product.id,
       name: item.product.name,
+      description: item.product.description,
+      imageUrl: item.product.imageUrl,
       quantity: item.quantity,
       price: item.product.price,
       personalizationData: item.personalizationData,
@@ -176,16 +178,8 @@ export default function CheckoutPage() {
                       <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-boutique-brown-light shadow-sm">Primary</span>
                     </div>
                     <p className="mt-1 text-sm leading-relaxed text-boutique-brown-light">Secure hosted checkout. Apple Pay, Google Pay, and Link appear automatically when the customer device and browser support them.</p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <WalletBadge label="VISA" tone="blue" />
-                      <WalletBadge label="mastercard" />
-                      <WalletBadge label=" Pay" tone="dark" />
-                      <WalletBadge label="G Pay" />
-                      <WalletBadge label="Link" tone="blue" />
-                    </div>
-                    <div className="mt-3 flex items-center gap-2 rounded-2xl bg-white/80 px-3 py-2 text-xs text-boutique-brown-light shadow-sm">
-                      <Zap className="h-3.5 w-3.5 text-boutique-brown" /> Demo wallet badges shown here; real wallet buttons are rendered inside Stripe Checkout when available.
-                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2"><WalletBadge label="VISA" tone="blue" /><WalletBadge label="mastercard" /><WalletBadge label=" Pay" tone="dark" /><WalletBadge label="G Pay" /><WalletBadge label="Link" tone="blue" /></div>
+                    <div className="mt-3 flex items-center gap-2 rounded-2xl bg-white/80 px-3 py-2 text-xs text-boutique-brown-light shadow-sm"><Zap className="h-3.5 w-3.5 text-boutique-brown" /> Demo wallet badges shown here; real wallet buttons are rendered inside Stripe Checkout when available.</div>
                   </div>
                   {selectedPaymentMethod === 'stripe' && <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-700" />}
                 </div>
@@ -196,31 +190,16 @@ export default function CheckoutPage() {
                 <div className="flex items-start gap-4 pr-20">
                   <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${selectedPaymentMethod === 'paypal' ? 'bg-[#ffc439] text-[#003087]' : 'bg-boutique-bg text-boutique-brown'}`}><WalletCards className="h-5 w-5" /></div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-bold text-boutique-brown">PayPal protected checkout</p>
-                      <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-boutique-brown-light shadow-sm">Secondary</span>
-                    </div>
+                    <div className="flex flex-wrap items-center gap-2"><p className="font-bold text-boutique-brown">PayPal protected checkout</p><span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-boutique-brown-light shadow-sm">Secondary</span></div>
                     <p className="mt-1 text-sm leading-relaxed text-boutique-brown-light">Customers can sign in to PayPal and complete payment on PayPal’s secure hosted page.</p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <WalletBadge label="PayPal" tone="blue" />
-                      <WalletBadge label="Buyer protection" />
-                      <WalletBadge label="Hosted checkout" />
-                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2"><WalletBadge label="PayPal" tone="blue" /><WalletBadge label="Buyer protection" /><WalletBadge label="Hosted checkout" /></div>
                   </div>
                   {selectedPaymentMethod === 'paypal' && <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-700" />}
                 </div>
               </button>
             </div>
 
-            <div className="rounded-[1.35rem] border border-boutique-brown/10 bg-white/80 p-4 shadow-sm">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-green-50 text-green-800"><ShieldCheck className="h-5 w-5" /></div>
-                <div>
-                  <p className="text-sm font-bold text-boutique-brown">Selected: {selectedPaymentMethod === 'paypal' ? 'PayPal' : 'Stripe card & wallets'}</p>
-                  <p className="mt-1 text-xs leading-relaxed text-boutique-brown-light">Little Wonders never stores card numbers, wallet credentials, or PayPal login details. Payment is completed on the selected provider’s secure checkout.</p>
-                </div>
-              </div>
-            </div>
+            <div className="rounded-[1.35rem] border border-boutique-brown/10 bg-white/80 p-4 shadow-sm"><div className="flex items-start gap-3"><div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-green-50 text-green-800"><ShieldCheck className="h-5 w-5" /></div><div><p className="text-sm font-bold text-boutique-brown">Selected: {selectedPaymentMethod === 'paypal' ? 'PayPal' : 'Stripe card & wallets'}</p><p className="mt-1 text-xs leading-relaxed text-boutique-brown-light">Little Wonders never stores card numbers, wallet credentials, or PayPal login details. Payment is completed on the selected provider’s secure checkout.</p></div></div></div>
           </section>
 
           <button disabled={isSubmitting || cartItems.length === 0} className={`w-full rounded-full px-6 py-4 text-base font-bold shadow-sm transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 ${selectedPaymentMethod === 'paypal' ? 'bg-[#ffc439] text-[#003087] hover:bg-[#f7b820]' : 'bg-boutique-brown text-white hover:bg-boutique-wood'}`}>{buttonLabel}</button>
