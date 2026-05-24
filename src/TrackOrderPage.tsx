@@ -36,9 +36,9 @@ type TrackedOrder = {
 };
 
 const STATUS_STEPS = [
-  { key: 'processing', label: 'Processing', icon: Clock3, note: 'We are preparing your gift' },
-  { key: 'shipped', label: 'Shipped', icon: Truck, note: 'Your order is on the way' },
-  { key: 'delivered', label: 'Delivered', icon: CheckCircle2, note: 'Delivered to your address' },
+  { key: 'processing', label: 'Preparing', icon: Clock3, completeLabel: 'In progress', pendingLabel: 'Waiting', completeNote: 'We are preparing your gift.', pendingNote: 'Your order will be prepared after payment is confirmed.' },
+  { key: 'shipped', label: 'Shipping', icon: Truck, completeLabel: 'Shipped', pendingLabel: 'Not shipped yet', completeNote: 'Your order is on the way.', pendingNote: 'Your gift has not been shipped yet.' },
+  { key: 'delivered', label: 'Delivery', icon: CheckCircle2, completeLabel: 'Delivered', pendingLabel: 'Not delivered yet', completeNote: 'Delivered to your address.', pendingNote: 'Delivery will update after shipping.' },
 ];
 
 const getStepState = (orderStatus: string, stepKey: string) => {
@@ -172,7 +172,7 @@ export default function TrackOrderPage() {
                   </div>
                   <div className="rounded-2xl border border-boutique-brown/10 bg-white px-5 py-4 shadow-sm">
                     <p className="text-[11px] font-bold uppercase tracking-wider text-boutique-brown/60">Payment</p>
-                    <div className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-bold ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' : order.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-700' : 'bg-amber-100 text-amber-800'}`}>{order.paymentStatus}</div>
+                    <div className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-bold ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' : order.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-700' : 'bg-amber-100 text-amber-800'}`}>{order.paymentStatus === 'paid' ? 'Paid' : order.paymentStatus === 'refunded' ? 'Refunded' : 'Awaiting payment'}</div>
                   </div>
                 </div>
               </div>
@@ -186,14 +186,15 @@ export default function TrackOrderPage() {
                   {STATUS_STEPS.map((step) => {
                     const Icon = step.icon;
                     const state = getStepState(order.orderStatus, step.key);
+                    const isComplete = state === 'complete';
                     return (
-                      <div key={step.key} className={`rounded-[1.7rem] border p-5 shadow-sm transition-all ${state === 'complete' ? 'border-green-200 bg-green-50/90 text-green-800' : 'border-boutique-brown/10 bg-[#fffaf3] text-boutique-brown-light'}`}>
+                      <div key={step.key} className={`rounded-[1.7rem] border p-5 shadow-sm transition-all ${isComplete ? 'border-green-200 bg-green-50/90 text-green-800' : 'border-boutique-brown/10 bg-[#fffaf3] text-boutique-brown-light opacity-85'}`}>
                         <div className="flex items-start gap-4">
-                          <div className={`flex h-12 w-12 items-center justify-center rounded-full ${state === 'complete' ? 'bg-green-100' : 'bg-white'}`}><Icon className="h-5 w-5" /></div>
+                          <div className={`flex h-12 w-12 items-center justify-center rounded-full ${isComplete ? 'bg-green-100' : 'bg-white'}`}><Icon className="h-5 w-5" /></div>
                           <div>
                             <p className="text-xl font-bold">{step.label}</p>
-                            <p className="mt-1 text-xs font-semibold opacity-80">{state === 'complete' ? 'Completed' : 'Pending'}</p>
-                            <p className="mt-2 text-sm opacity-80">{step.note}</p>
+                            <p className={`mt-1 inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${isComplete ? 'bg-green-100 text-green-800' : 'bg-white text-boutique-brown-light'}`}>{isComplete ? step.completeLabel : step.pendingLabel}</p>
+                            <p className="mt-2 text-sm opacity-80">{isComplete ? step.completeNote : step.pendingNote}</p>
                           </div>
                         </div>
                       </div>
@@ -203,9 +204,9 @@ export default function TrackOrderPage() {
               )}
 
               <div className="mt-7 grid gap-4 md:grid-cols-3">
-                <InfoCard icon={MapPin} title="Shipping" content={<><p className="font-semibold text-boutique-brown">{order.customerName}</p><p className="text-sm text-boutique-brown-light">{order.customerEmail}</p>{(order.shippingCity || order.shippingState) && <p className="mt-2 text-sm text-boutique-brown-light">{order.shippingCity}, {order.shippingState}</p>}</>} />
-                <InfoCard icon={Truck} title="Tracking Reference" content={<><div className="flex items-center gap-2"><p className="font-bold text-boutique-brown">{order.trackingReference || 'Not added yet'}</p>{order.trackingReference && <button onClick={() => copyText(order.trackingReference || '', 'tracking')} className="rounded-full bg-white px-2 py-1 text-[11px] font-bold text-boutique-brown shadow-sm">{copied === 'tracking' ? 'Copied' : 'Copy'}</button>}</div><p className="mt-2 text-sm text-boutique-brown-light">Tracking will appear here after the order ships.</p></>} />
-                <InfoCard icon={CreditCard} title="Order Summary" content={<><p className="font-semibold text-boutique-brown">{order.items.length} item{order.items.length > 1 ? 's' : ''}</p><p className="text-sm text-boutique-brown-light">Payment status: {order.paymentStatus}</p><p className="mt-2 text-sm text-boutique-brown-light">Total: ${order.totalAmount.toFixed(2)}</p></>} />
+                <InfoCard icon={MapPin} title="Shipping details" content={<><p className="font-semibold text-boutique-brown">{order.customerName}</p><p className="text-sm text-boutique-brown-light">{order.customerEmail}</p>{(order.shippingCity || order.shippingState) && <p className="mt-2 text-sm text-boutique-brown-light">{order.shippingCity}, {order.shippingState}</p>}</>} />
+                <InfoCard icon={Truck} title="Shipment tracking" content={<><div className="flex items-center gap-2"><p className="font-bold text-boutique-brown">{order.trackingReference || 'Not shipped yet'}</p>{order.trackingReference && <button onClick={() => copyText(order.trackingReference || '', 'tracking')} className="rounded-full bg-white px-2 py-1 text-[11px] font-bold text-boutique-brown shadow-sm">{copied === 'tracking' ? 'Copied' : 'Copy'}</button>}</div><p className="mt-2 text-sm text-boutique-brown-light">A tracking number will appear here once your gift has been shipped.</p></>} />
+                <InfoCard icon={CreditCard} title="Order summary" content={<><p className="font-semibold text-boutique-brown">{order.items.length} item{order.items.length > 1 ? 's' : ''}</p><p className="text-sm text-boutique-brown-light">Payment: {order.paymentStatus === 'paid' ? 'Paid' : order.paymentStatus === 'refunded' ? 'Refunded' : 'Awaiting payment'}</p><p className="mt-2 text-sm text-boutique-brown-light">Total: ${order.totalAmount.toFixed(2)}</p></>} />
               </div>
 
               <div className="mt-8">
