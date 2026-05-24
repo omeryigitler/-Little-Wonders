@@ -28,7 +28,7 @@ export const AdminSettings = () => {
         <div className="relative z-10">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-[#fffaf3] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-boutique-brown-light"><Sparkles className="h-4 w-4" /> Store setup</div>
           <h1 className="font-serif text-5xl leading-none text-boutique-brown">Settings</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">A practical checklist for payments, storefront, shipping, email, admin and launch readiness.</p>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">A practical checklist for payments, storefront, shipping, email, admin access and launch readiness.</p>
         </div>
       </div>
 
