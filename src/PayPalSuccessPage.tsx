@@ -14,11 +14,17 @@ export default function PayPalSuccessPage() {
   useEffect(() => {
     const capturePayment = async () => {
       try {
-        const response = await fetch('/api/paypal/capture-order', {
+        const response = await fetch('/api/paypal-capture-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token, orderNumber: orderReference }),
         });
+
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          const text = await response.text();
+          throw new Error(text.includes('<!doctype') || text.includes('<html') ? 'PayPal confirmation endpoint returned a website page instead of JSON. Please redeploy and try again.' : text);
+        }
 
         const data = await response.json();
 
