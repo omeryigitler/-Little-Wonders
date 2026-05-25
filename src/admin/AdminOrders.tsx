@@ -556,7 +556,7 @@ export const AdminOrders = () => {
       </div>
 
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-boutique-brown/35 px-4 backdrop-blur-sm">
+        <div className="fixed inset-y-0 left-64 right-0 z-50 flex items-center justify-center bg-boutique-brown/35 px-6 backdrop-blur-sm">
           <div className="max-h-[90vh] w-full max-w-6xl overflow-y-auto rounded-[2.2rem] border border-boutique-brown/10 bg-white shadow-[0_30px_100px_rgba(58,37,26,0.28)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:h-0 [&::-webkit-scrollbar]:w-0">
             <div className="sticky top-0 z-10 overflow-hidden border-b border-boutique-brown/10 bg-[#fffaf3] p-6">
               <img

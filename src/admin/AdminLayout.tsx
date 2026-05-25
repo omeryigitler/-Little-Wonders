@@ -25,8 +25,8 @@ export const AdminLayout = () => {
       <img src="/toy-abc-blocks.png" className="pointer-events-none fixed right-10 bottom-14 z-0 hidden w-20 -rotate-6 opacity-30 mix-blend-multiply xl:block" alt="" />
 
       <AdminSidebar onSignOut={handleSignOut} />
-      <main className="relative z-10 min-h-screen pl-72 pr-8 py-8">
-        <div className="mx-auto max-w-7xl">
+      <main className="relative z-10 min-h-screen ml-64 px-8 py-8 xl:px-10 2xl:px-12">
+        <div className="mx-auto w-full max-w-[1440px]">
           <Outlet />
         </div>
       </main>
