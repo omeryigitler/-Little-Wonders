@@ -112,7 +112,7 @@ export default function Storefront() {
         {productsLoading && <p className="text-boutique-brown-light text-sm mb-6 relative z-20">Loading products...</p>}
 
         <div id="shop" className="scroll-mt-24 flex flex-col gap-y-14 px-4 md:px-8 w-full max-w-[1620px] mx-auto z-20 relative md:-mb-6 md:-mt-4">
-          {productRows.map((row, rowIndex) => <div key={rowIndex} className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-6 md:gap-4 w-full">{row.map((product) => <div key={product.id} className="flex w-full max-w-[520px] md:w-[32.5%]"><ProductCard product={product} /></div>)}</div>)}
+          {productRows.map((row, rowIndex) => <div key={rowIndex} className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-6 md:gap-4 w-full">{row.map((product) => <div key={product.id} className="flex w-full max-w-[540px] md:w-[32.5%]"><ProductCard product={product} /></div>)}</div>)}
         </div>
       </main>
 
