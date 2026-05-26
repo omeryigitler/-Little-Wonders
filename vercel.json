@@ -13,6 +13,10 @@
     }
   ],
   "rewrites": [
+    { "source": "/api/account/google/start", "destination": "/api/admin/login" },
+    { "source": "/api/account/google/callback", "destination": "/api/admin/login" },
+    { "source": "/api/account/me", "destination": "/api/admin/login?accountRoute=me" },
+    { "source": "/api/account/orders", "destination": "/api/admin/login?accountRoute=orders" },
     { "source": "/admin", "destination": "/" },
     { "source": "/admin/(.*)", "destination": "/" },
     { "source": "/account", "destination": "/" },
