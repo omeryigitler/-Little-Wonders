@@ -59,7 +59,7 @@ export default function Storefront() {
 
         <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex-1 flex justify-center md:absolute md:left-1/2 md:-translate-x-1/2">
           <div className="flex items-center gap-2">
-            <span className="font-serif text-[30px] leading-none md:text-[36px] text-boutique-brown tracking-wide translate-y-1 relative z-10">Little Wonders</span>
+            <span className="font-serif text-[30px] leading-none md:text-[36px] text-boutique-brown tracking-wide translate-y-1 relative z-10">MY BABY SHIRE</span>
             <img src="/decorative-moon-star.png" className="w-6 h-6 md:w-7 md:h-7 object-contain -translate-y-2 opacity-80 z-0" alt="Moon Star" />
           </div>
         </button>
@@ -121,7 +121,7 @@ export default function Storefront() {
           <div className="flex flex-col items-start gap-2 py-4 md:py-0 md:pr-10">
              <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-end gap-3 mb-1 text-left">
                <img src="/toy-rocking-horse-beige.png" className="w-[108px] md:w-[128px] h-auto object-contain mix-blend-multiply flex-shrink-0 drop-shadow-sm" alt="Rocking Horse" />
-               <span className="font-serif text-[20px] md:text-[24px] tracking-wide text-boutique-brown leading-none pb-2 md:pb-3">Little Wonders</span>
+               <span className="font-serif text-[20px] md:text-[24px] tracking-wide text-boutique-brown leading-none pb-2 md:pb-3">MY BABY SHIRE</span>
              </button>
              <p className="font-sans text-boutique-brown-light leading-relaxed max-w-[260px] text-[13px] opacity-90">Crafting expertly personalized baby gifts and nursery essentials with love and care.</p>
           </div>

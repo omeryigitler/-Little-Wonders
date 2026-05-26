@@ -15,8 +15,8 @@ type OrderEmailPayload = {
 };
 
 const resendApiKey = process.env.RESEND_API_KEY;
-const fromEmail = process.env.FROM_EMAIL || 'Little Wonders <orders@littlewonders.example>';
-const siteUrl = (process.env.PUBLIC_SITE_URL || 'https://little-wonders-phi.vercel.app').replace(/\/$/, '');
+const fromEmail = process.env.FROM_EMAIL || 'MY BABY SHIRE <orders@mybabyshire.com>';
+const siteUrl = (process.env.PUBLIC_SITE_URL || 'https://mybabyshire.com').replace(/\/$/, '');
 
 const money = (value: number) => `$${Number(value || 0).toFixed(2)}`;
 
@@ -34,7 +34,7 @@ const baseEmailHtml = ({ title, intro, orderNumber, customerName, total, payment
   <div style="margin:0;padding:0;background:#fff8ef;font-family:Arial,Helvetica,sans-serif;color:#3b2418;">
     <div style="max-width:640px;margin:0 auto;padding:32px 18px;">
       <div style="background:#ffffff;border:1px solid #eadfd4;border-radius:28px;padding:34px;box-shadow:0 18px 50px rgba(58,37,26,0.10);">
-        <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#9b8070;font-weight:700;margin-bottom:14px;">Little Wonders</div>
+        <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#9b8070;font-weight:700;margin-bottom:14px;">MY BABY SHIRE</div>
         <h1 style="margin:0;font-family:Georgia,serif;font-size:38px;line-height:1.1;color:#3b2418;">${title}</h1>
         <p style="margin:16px 0 0;color:#6f594c;line-height:1.7;font-size:15px;">Hi ${customerName}, ${intro}</p>
         <div style="margin-top:26px;background:#fff8ef;border:1px solid #eadfd4;border-radius:22px;padding:20px;">
@@ -51,7 +51,7 @@ const baseEmailHtml = ({ title, intro, orderNumber, customerName, total, payment
           <div><strong style="color:#3b2418;">Total:</strong> ${money(total)}</div>
         </div>
         <a href="${trackUrl}" style="display:inline-block;margin-top:26px;background:#3b2418;color:#ffffff;text-decoration:none;border-radius:999px;padding:14px 22px;font-size:14px;font-weight:700;">Track your order</a>
-        <p style="margin-top:28px;color:#9b8070;font-size:12px;line-height:1.6;">Thank you for choosing Little Wonders. Keep this email for your records.</p>
+        <p style="margin-top:28px;color:#9b8070;font-size:12px;line-height:1.6;">Thank you for choosing MY BABY SHIRE. Keep this email for your records.</p>
       </div>
     </div>
   </div>`;
@@ -93,7 +93,7 @@ export const sendOrderShippedEmail = async (payload: OrderEmailPayload) => {
   return sendEmail({
     to: payload.to,
     subject: `Your order has shipped — ${payload.orderNumber}`,
-    html: baseEmailHtml({ ...payload, title: 'Your Gift Has Shipped', intro: 'your Little Wonders gift is now on the way.' }),
+    html: baseEmailHtml({ ...payload, title: 'Your Gift Has Shipped', intro: 'your MY BABY SHIRE gift is now on the way.' }),
   });
 };
 
@@ -101,6 +101,6 @@ export const sendOrderDeliveredEmail = async (payload: OrderEmailPayload) => {
   return sendEmail({
     to: payload.to,
     subject: `Delivered — ${payload.orderNumber}`,
-    html: baseEmailHtml({ ...payload, title: 'Delivered', intro: 'your Little Wonders gift has been marked as delivered.' }),
+    html: baseEmailHtml({ ...payload, title: 'Delivered', intro: 'your MY BABY SHIRE gift has been marked as delivered.' }),
   });
 };

@@ -190,7 +190,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ? [
           {
             status: nextShipmentStatus,
-            description: `${getCarrierDisplayName(nextCarrier)} shipment details were updated by Little Wonders.`,
+            description: `${getCarrierDisplayName(nextCarrier)} shipment details were updated by MY BABY SHIRE.`,
             timestamp: new Date().toISOString(),
           },
           ...timelineSeed,

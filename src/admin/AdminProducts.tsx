@@ -98,7 +98,7 @@ export const AdminProducts = () => {
               <Sparkles className="h-4 w-4" /> Product studio
             </div>
             <h1 className="font-serif text-5xl leading-none text-boutique-brown">Products</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">Manage Little Wonders gifts, product images, pricing, visibility, and personalization readiness.</p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">Manage MY BABY SHIRE gifts, product images, pricing, visibility, and personalization readiness.</p>
           </div>
           <Link to="/admin/products/new" className="inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-boutique-brown px-5 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-boutique-wood">
             <Plus className="h-4 w-4" /> Add Product

@@ -40,7 +40,7 @@ export const AdminSettings = () => {
         <SettingCard icon={Truck} title="Shipping" status="Ready for tests">Flat shipping, admin shipment updates, public tracking lookup, carrier links and shipment timeline are connected. Later: add live carrier rates.</SettingCard>
         <SettingCard icon={Mail} title="Email notifications" status="Later">Email code is ready, but real sending is waiting for the final domain. Later: connect Resend, verify domain, add FROM_EMAIL and RESEND_API_KEY.</SettingCard>
         <SettingCard icon={ShieldCheck} title="Admin access" status="Email + Google">Email/password and Google admin sign-in are wired. Apple is visible as coming soon until an Apple Developer account is ready.</SettingCard>
-        <SettingCard icon={Sparkles} title="Brand system" status="In progress">Back office has Little Wonders colors, clouds, toy visuals and soft card layouts. Remaining flows can be refined as the shop grows.</SettingCard>
+        <SettingCard icon={Sparkles} title="Brand system" status="In progress">Back office has MY BABY SHIRE colors, clouds, toy visuals and soft card layouts. Remaining flows can be refined as the shop grows.</SettingCard>
       </div>
 
       <div className="rounded-[2rem] border border-boutique-brown/10 bg-white/82 p-6 shadow-[0_20px_55px_rgba(58,37,26,0.08)] backdrop-blur-sm">

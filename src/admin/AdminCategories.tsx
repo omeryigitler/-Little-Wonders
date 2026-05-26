@@ -77,7 +77,7 @@ export const AdminCategories = () => {
 
       <div className="rounded-[2rem] border border-boutique-brown/10 bg-white/82 p-6 shadow-[0_20px_55px_rgba(58,37,26,0.08)] backdrop-blur-sm">
         <h2 className="font-serif text-3xl text-boutique-brown">How categories work right now</h2>
-        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-boutique-brown-light">Little Wonders currently groups products by status and promotion badges instead of a separate category database. This keeps the storefront simple while the catalog is small. If you want real custom categories later, we can add a category table and assign products to collections.</p>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-boutique-brown-light">MY BABY SHIRE currently groups products by status and promotion badges instead of a separate category database. This keeps the storefront simple while the catalog is small. If you want real custom categories later, we can add a category table and assign products to collections.</p>
       </div>
     </div>
   );

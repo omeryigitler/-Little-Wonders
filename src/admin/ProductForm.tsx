@@ -136,7 +136,7 @@ export const ProductForm = () => {
           <div>
             <button onClick={() => navigate('/admin/products')} className="mb-4 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-[#fffaf3] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-boutique-brown-light hover:bg-white"><ArrowLeft className="h-4 w-4" /> Products</button>
             <h1 className="font-serif text-5xl leading-none text-boutique-brown">{isEditing ? 'Edit Product' : 'Add New Product'}</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">{isEditing ? 'Update product details, media, pricing and personalization settings.' : 'Create a new Little Wonders gift for the storefront.'}</p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">{isEditing ? 'Update product details, media, pricing and personalization settings.' : 'Create a new MY BABY SHIRE gift for the storefront.'}</p>
           </div>
           <div className="flex gap-3">
             <button onClick={() => navigate('/admin/products')} className="rounded-full border border-boutique-brown/10 bg-white px-5 py-3 text-sm font-bold text-boutique-brown shadow-sm hover:bg-[#fff4df]">Discard</button>

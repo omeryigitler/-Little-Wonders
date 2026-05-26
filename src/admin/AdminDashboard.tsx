@@ -96,7 +96,7 @@ export const AdminDashboard = () => {
           <div>
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-[#fffaf3] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-boutique-brown-light"><Sparkles className="h-4 w-4" /> Back office overview</div>
             <h1 className="font-serif text-5xl leading-none text-boutique-brown">Dashboard</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">A quick view of Little Wonders orders, products, payments, and next actions.</p>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-boutique-brown-light">A quick view of MY BABY SHIRE orders, products, payments, and next actions.</p>
           </div>
           <div className="flex gap-3">
             <button onClick={loadDashboard} disabled={isLoading} className="inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-white px-5 py-3 text-sm font-bold text-boutique-brown shadow-sm hover:bg-[#fff4df] disabled:opacity-50"><RefreshCcw className="h-4 w-4" /> Refresh</button>

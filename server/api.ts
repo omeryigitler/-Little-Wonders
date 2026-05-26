@@ -189,7 +189,7 @@ const createGoogleAuthSuccessHtml = (token: string) => {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Little Wonders Admin</title>
+    <title>MY BABY SHIRE Admin</title>
   </head>
   <body>
     <script>
@@ -492,7 +492,7 @@ router.get("/admin-google-callback", async (req, res) => {
     if (!allowedEmails.includes(email)) {
       return redirectAdminAuthError(
         res,
-        "This Google account is not allowed to access the Little Wonders admin.",
+        "This Google account is not allowed to access the MY BABY SHIRE admin.",
       );
     }
 
@@ -1017,7 +1017,7 @@ router.put("/admin/orders/:id", requireAdmin, async (req, res) => {
       ? [
           {
             status: nextShipmentStatus,
-            description: `${getCarrierDisplayName(nextCarrier)} shipment details were updated by Little Wonders.`,
+            description: `${getCarrierDisplayName(nextCarrier)} shipment details were updated by MY BABY SHIRE.`,
             timestamp: new Date().toISOString(),
           },
           ...timelineSeed,
@@ -1252,7 +1252,7 @@ router.post("/checkout/create-payment", async (req, res) => {
             unit_amount: toCents(Number(item.price) || 0),
             product_data: {
               name: item.name,
-              description: item.description || "Personalized Little Wonders gift",
+              description: item.description || "Personalized MY BABY SHIRE gift",
               images: productImage ? [productImage] : undefined,
               metadata: { productId: item.productId || "" },
             },
@@ -1290,7 +1290,7 @@ router.post("/checkout/create-payment", async (req, res) => {
         },
         shipping_address: {
           message:
-            "Please enter the delivery address for your Little Wonders gift.",
+            "Please enter the delivery address for your MY BABY SHIRE gift.",
         },
       },
       metadata: {
@@ -1419,7 +1419,7 @@ const createPayPalOrderHandler = async (req: Request, res: Response) => {
         purchase_units: [
           {
             reference_id: order.order_number,
-            description: `Little Wonders order ${order.order_number}`,
+            description: `MY BABY SHIRE order ${order.order_number}`,
             amount: {
               currency_code: String(currency).toUpperCase(),
               value: Number(total || 0).toFixed(2),
@@ -1447,7 +1447,7 @@ const createPayPalOrderHandler = async (req: Request, res: Response) => {
         payment_source: {
           paypal: {
             experience_context: {
-              brand_name: "Little Wonders",
+              brand_name: "MY BABY SHIRE",
               locale: "en-US",
               shipping_preference: "NO_SHIPPING",
               user_action: "PAY_NOW",
@@ -1638,7 +1638,7 @@ router.get("/track", async (req, res) => {
         status: shipmentStatus,
         message: trackingUrl
           ? "Official carrier tracking is available through the tracking link."
-          : "Live carrier API is not connected yet. Updates are managed by Little Wonders.",
+          : "Live carrier API is not connected yet. Updates are managed by MY BABY SHIRE.",
         events: [],
       },
     });

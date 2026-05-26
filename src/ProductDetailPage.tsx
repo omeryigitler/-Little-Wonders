@@ -86,7 +86,7 @@ export default function ProductDetailPage() {
           <ArrowLeft className="h-4 w-4" /> Back to shop
         </Link>
         <Link to="/" className="flex items-center gap-2 font-serif text-3xl text-boutique-brown">
-          Little Wonders <img src="/decorative-moon-star.png" className="h-7 w-7 object-contain opacity-75" alt="" />
+          MY BABY SHIRE <img src="/decorative-moon-star.png" className="h-7 w-7 object-contain opacity-75" alt="" />
         </Link>
         <button onClick={openCart} className="rounded-full p-2 text-boutique-brown hover:bg-white/70 hover:text-boutique-wood">
           <ShoppingBag size={22} strokeWidth={1.5} />

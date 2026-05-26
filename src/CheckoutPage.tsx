@@ -167,7 +167,7 @@ export default function CheckoutPage() {
 
       <header className="relative z-20 flex items-center justify-between border-b border-boutique-brown/10 bg-boutique-bg/80 px-6 py-5 backdrop-blur-md md:px-12">
         <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-boutique-brown-light hover:text-boutique-brown"><ArrowLeft className="h-4 w-4" /> Back to shop</Link>
-        <Link to="/" className="font-serif text-3xl text-boutique-brown">Little Wonders</Link>
+        <Link to="/" className="font-serif text-3xl text-boutique-brown">MY BABY SHIRE</Link>
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-boutique-brown-light"><Lock className="h-4 w-4" /> Secure checkout</div>
       </header>
 
@@ -246,7 +246,7 @@ export default function CheckoutPage() {
               </button>
             </div>
 
-            <div className="rounded-[1.35rem] border border-boutique-brown/10 bg-white/80 p-4 shadow-sm"><div className="flex items-start gap-3"><div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-green-50 text-green-800"><ShieldCheck className="h-5 w-5" /></div><div><p className="text-sm font-bold text-boutique-brown">Selected: {selectedPaymentMethod === 'paypal' ? 'PayPal' : 'Stripe card & wallets'}</p><p className="mt-1 text-xs leading-relaxed text-boutique-brown-light">Little Wonders never stores card numbers, wallet credentials, or PayPal login details. Payment is completed on the selected provider’s secure checkout.</p></div></div></div>
+            <div className="rounded-[1.35rem] border border-boutique-brown/10 bg-white/80 p-4 shadow-sm"><div className="flex items-start gap-3"><div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-green-50 text-green-800"><ShieldCheck className="h-5 w-5" /></div><div><p className="text-sm font-bold text-boutique-brown">Selected: {selectedPaymentMethod === 'paypal' ? 'PayPal' : 'Stripe card & wallets'}</p><p className="mt-1 text-xs leading-relaxed text-boutique-brown-light">MY BABY SHIRE never stores card numbers, wallet credentials, or PayPal login details. Payment is completed on the selected provider’s secure checkout.</p></div></div></div>
           </section>
 
           <button disabled={isSubmitting || cartItems.length === 0} className={`w-full rounded-full px-6 py-4 text-base font-bold shadow-sm transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 ${selectedPaymentMethod === 'paypal' ? 'bg-[#ffc439] text-[#003087] hover:bg-[#f7b820]' : 'bg-boutique-brown text-white hover:bg-boutique-wood'}`}>{buttonLabel}</button>

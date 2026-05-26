@@ -108,7 +108,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         providerType: getTrackingProviderType(carrier),
         provider: getCarrierDisplayName(carrier),
         status: shipmentStatus,
-        message: trackingUrl ? 'Official carrier tracking is available through the tracking link.' : 'Live carrier API is not connected yet. Updates are managed by Little Wonders.',
+        message: trackingUrl ? 'Official carrier tracking is available through the tracking link.' : 'Live carrier API is not connected yet. Updates are managed by MY BABY SHIRE.',
         events: [],
       },
     });

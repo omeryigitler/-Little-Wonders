@@ -146,7 +146,7 @@ export function getShipmentStatusLabel(status?: string | null) {
 
 export function getCarrierCustomerNote(carrier?: string | null) {
   const key = normalizeCarrierKey(carrier);
-  return CARRIER_CONFIGS[key]?.customerNote || 'Tracking updates are managed manually by the Little Wonders team.';
+  return CARRIER_CONFIGS[key]?.customerNote || 'Tracking updates are managed manually by the MY BABY SHIRE team.';
 }
 
 export function validateTrackingNumber(carrier?: string | null, trackingNumber?: string | null) {
@@ -222,7 +222,7 @@ export function buildManualTimeline(params: { orderNumber: string; paymentStatus
   ];
 
   if (params.paymentStatus === 'paid') {
-    events.unshift({ status: 'preparing_shipment', description: 'Your gift is being prepared by the Little Wonders team.', timestamp: new Date().toISOString() });
+    events.unshift({ status: 'preparing_shipment', description: 'Your gift is being prepared by the MY BABY SHIRE team.', timestamp: new Date().toISOString() });
   }
 
   if (params.orderStatus === 'shipped') {

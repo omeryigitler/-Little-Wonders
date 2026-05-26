@@ -40,7 +40,7 @@ export default function PaymentSuccessPage() {
           <div className="relative z-10 mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-green-700 shadow-[0_12px_30px_rgba(22,101,52,0.16)]"><CheckCircle2 className="h-11 w-11" /></div>
           <div className="relative z-10 mb-4 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-[#fffaf3] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-boutique-brown-light"><Sparkles className="h-3.5 w-3.5" /> Payment confirmed</div>
           <h1 className="relative z-10 font-serif text-4xl text-boutique-brown md:text-6xl">Thank You!</h1>
-          <p className="relative z-10 mx-auto mt-4 max-w-lg text-sm leading-relaxed text-boutique-brown-light">Your payment was completed successfully. We received your Little Wonders gift order and will start preparing it soon.</p>
+          <p className="relative z-10 mx-auto mt-4 max-w-lg text-sm leading-relaxed text-boutique-brown-light">Your payment was completed successfully. We received your MY BABY SHIRE gift order and will start preparing it soon.</p>
 
           {orderReference && (
             <div className="relative z-10 mt-7 rounded-[1.6rem] border border-boutique-brown/10 bg-white p-4 shadow-sm">

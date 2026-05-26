@@ -100,7 +100,7 @@ const createPayPalOrderHandler = async (req: express.Request, res: express.Respo
         intent: 'CAPTURE',
         purchase_units: [{
           reference_id: order.order_number,
-          description: `Little Wonders order ${order.order_number}`,
+          description: `MY BABY SHIRE order ${order.order_number}`,
           amount: {
             currency_code: String(currency).toUpperCase(),
             value: Number(total || 0).toFixed(2),
@@ -118,7 +118,7 @@ const createPayPalOrderHandler = async (req: express.Request, res: express.Respo
         payment_source: {
           paypal: {
             experience_context: {
-              brand_name: 'Little Wonders',
+              brand_name: 'MY BABY SHIRE',
               locale: 'en-US',
               shipping_preference: 'NO_SHIPPING',
               user_action: 'PAY_NOW',

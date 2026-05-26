@@ -49,7 +49,7 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
             <Lock className="h-6 w-6" />
           </div>
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-[#fffaf3] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-boutique-brown-light">
-            <Sparkles className="h-3.5 w-3.5" /> Little Wonders
+            <Sparkles className="h-3.5 w-3.5" /> MY BABY SHIRE
           </div>
           <h1 className="font-serif text-4xl leading-none text-boutique-brown">Admin Sign In</h1>
           <p className="mt-2 text-sm text-boutique-brown-light">Choose email, Google, or Apple when it becomes available.</p>

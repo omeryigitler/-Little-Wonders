@@ -1,4 +1,4 @@
-# Little Wonders
+# MY BABY SHIRE
 
 Personalized baby gift storefront with an admin product flow.
 
@@ -101,7 +101,7 @@ In Google Cloud Console, create an OAuth client for a web application and add
 this redirect URI:
 
 ```txt
-https://little-wonders-phi.vercel.app/api/admin-google-callback
+https://mybabyshire.com/api/admin-google-callback
 ```
 
 Then add `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_ADMIN_EMAILS`

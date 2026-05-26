@@ -104,7 +104,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           unit_amount: toCents(Number(item.price) || 0),
           product_data: {
             name: item.name,
-            description: item.description || 'Personalized Little Wonders gift',
+            description: item.description || 'Personalized MY BABY SHIRE gift',
             images: productImage ? [productImage] : undefined,
             metadata: {
               productId: item.productId || '',
@@ -138,7 +138,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       payment_method_types: ['card'],
       custom_text: {
         submit: { message: 'Your personalized gift order will be prepared after payment confirmation.' },
-        shipping_address: { message: 'Please enter the delivery address for your Little Wonders gift.' },
+        shipping_address: { message: 'Please enter the delivery address for your MY BABY SHIRE gift.' },
       },
       metadata: {
         orderId: order.id,

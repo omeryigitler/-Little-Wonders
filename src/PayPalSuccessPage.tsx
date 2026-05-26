@@ -41,7 +41,7 @@ export default function PayPalSuccessPage() {
 
         clearCart();
         setStatus('success');
-        setMessage('Your PayPal payment was completed successfully. We received your Little Wonders gift order and will start preparing it soon.');
+        setMessage('Your PayPal payment was completed successfully. We received your MY BABY SHIRE gift order and will start preparing it soon.');
       } catch (error) {
         setStatus('error');
         setMessage((error as Error).message);

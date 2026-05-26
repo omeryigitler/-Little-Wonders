@@ -152,15 +152,15 @@ export default function TrackOrderPage() {
 
       <header className="relative z-20 flex items-center justify-between border-b border-boutique-brown/10 bg-boutique-bg/85 px-6 py-5 backdrop-blur-md md:px-12">
         <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-boutique-brown-light hover:text-boutique-brown"><ArrowLeft className="h-4 w-4" /> Back to shop</Link>
-        <Link to="/" className="flex items-center gap-2 font-serif text-3xl text-boutique-brown">Little Wonders <img src="/decorative-moon-star.png" className="h-7 w-7 object-contain opacity-75" alt="" /></Link>
+        <Link to="/" className="flex items-center gap-2 font-serif text-3xl text-boutique-brown">MY BABY SHIRE <img src="/decorative-moon-star.png" className="h-7 w-7 object-contain opacity-75" alt="" /></Link>
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-boutique-brown-light"><PackageCheck className="h-4 w-4" /> Order tracking</div>
       </header>
 
       <main className="relative z-10 mx-auto max-w-6xl px-6 py-10 md:py-16">
         <div className="mx-auto max-w-3xl text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-white/75 px-4 py-2 text-xs font-bold uppercase tracking-wider text-boutique-brown-light shadow-sm"><Sparkles className="h-4 w-4" /> Follow your Little Wonders order</div>
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-white/75 px-4 py-2 text-xs font-bold uppercase tracking-wider text-boutique-brown-light shadow-sm"><Sparkles className="h-4 w-4" /> Follow your MY BABY SHIRE order</div>
           <h1 className="font-serif text-5xl leading-none text-boutique-brown md:text-7xl">Order Tracking</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-boutique-brown-light">Enter your Little Wonders order reference or tracking number to see the latest shipping progress.</p>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-boutique-brown-light">Enter your MY BABY SHIRE order reference or tracking number to see the latest shipping progress.</p>
         </div>
 
         <form onSubmit={handleTrack} className="relative mx-auto mt-8 max-w-3xl rounded-[2.2rem] border border-boutique-brown/10 bg-white/80 p-4 shadow-[0_20px_60px_rgba(58,37,26,0.10)] backdrop-blur-sm">

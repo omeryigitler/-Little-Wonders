@@ -39,7 +39,7 @@ export const AdminSidebar = ({ onSignOut }: AdminSidebarProps) => {
             <Sparkles className="h-6 w-6" />
           </div>
           <div>
-            <p className="font-serif text-2xl leading-none text-boutique-brown">Little Wonders</p>
+            <p className="font-serif text-2xl leading-none text-boutique-brown">MY BABY SHIRE</p>
             <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.18em] text-boutique-brown/55">Back Office</p>
           </div>
         </div>
