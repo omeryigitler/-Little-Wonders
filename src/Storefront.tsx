@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Search, ShoppingBag } from 'lucide-react';
+import { Search, ShoppingBag, UserRound } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useStore } from './store/useStore';
 import { CartDrawer } from './components/CartDrawer';
@@ -64,8 +64,11 @@ export default function Storefront() {
           </div>
         </button>
 
-        <div className="flex items-center gap-6 text-boutique-brown">
+        <div className="flex items-center gap-3 md:gap-6 text-boutique-brown">
           <button type="button" onClick={() => scrollToSection('shop')} className="hover:text-boutique-wood transition-colors p-2"><Search size={22} strokeWidth={1.5} /></button>
+          <Link to="/account" className="hover:text-boutique-wood transition-colors p-2" aria-label="Member account">
+            <UserRound size={22} strokeWidth={1.5} />
+          </Link>
           <button type="button" onClick={openCart} className="hover:text-boutique-wood transition-colors p-2 relative">
             <ShoppingBag size={22} strokeWidth={1.5} />
             {cartItemCount > 0 && <span className="absolute top-1 right-1 w-4 h-4 bg-boutique-brown text-white text-[10px] font-bold rounded-full flex items-center justify-center">{cartItemCount}</span>}
@@ -137,6 +140,7 @@ export default function Storefront() {
           <div id="personalization" className="scroll-mt-24 flex flex-col gap-3 py-4 md:py-0 md:px-10">
             <h4 className="font-serif tracking-[0.1em] text-boutique-brown text-sm md:text-[14px] uppercase flex items-center gap-3 mb-1">SUPPORT <img src="/toy-drum-blue.png" className="w-[60px] h-auto object-contain mix-blend-multiply translate-y-[-2px] drop-shadow-sm" alt="" /></h4>
             <div className="flex flex-col gap-2">
+              <Link to="/account" className="hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">My Account</Link>
               <Link to="/track-order" className="hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">Track Your Order</Link>
               <button type="button" onClick={() => scrollToSection('personalization')} className="text-left hover:text-boutique-wood transition-colors text-boutique-brown-light opacity-90 text-[13px] md:text-[14px]">Personalization Help</button>
             </div>
