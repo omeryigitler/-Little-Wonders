@@ -13,7 +13,6 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/admin", "destination": "/" },
     { "source": "/admin/(.*)", "destination": "/" },
     { "source": "/account", "destination": "/" },
