@@ -4,6 +4,7 @@ import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import { Buffer } from 'node:buffer';
 import apiRoutes from '../server/api.js';
+import accountRoutes from '../server/accountApi.js';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -174,5 +175,6 @@ app.post('/api/paypal/capture-order', capturePayPalOrderHandler);
 app.post('/api/paypal-capture-order', capturePayPalOrderHandler);
 
 app.use('/api', apiRoutes);
+app.use('/api', accountRoutes);
 
 export default app;
