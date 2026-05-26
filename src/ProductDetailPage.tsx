@@ -1,21 +1,40 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Gift, Heart, ShieldCheck, ShoppingBag, Sparkles, Truck, X } from 'lucide-react';
 import { CartDrawer } from './components/CartDrawer';
 import { CardDesignFrame } from './components/CardDesignFrame';
 import { PersonalizationModal } from './components/PersonalizationModal';
-import { useStore } from './store/useStore';
+import { Product, useStore } from './store/useStore';
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
-  const { products, loadProducts, productsLoading, openPersonalizationModal, addToCart, openCart } = useStore();
+  const { openPersonalizationModal, addToCart, openCart } = useStore();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [productLoading, setProductLoading] = useState(true);
   const [showSkipModal, setShowSkipModal] = useState(false);
 
   useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+    const loadProduct = async () => {
+      if (!slug) {
+        setProductLoading(false);
+        return;
+      }
 
-  const product = useMemo(() => products.find((item) => item.slug === slug || item.id === slug), [products, slug]);
+      setProductLoading(true);
+      try {
+        const response = await fetch(`/api/products/${encodeURIComponent(slug)}`);
+        if (!response.ok) throw new Error('Product API failed');
+        setProduct(await response.json());
+      } catch (error) {
+        console.error('Failed to load product:', error);
+        setProduct(null);
+      } finally {
+        setProductLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [slug]);
 
   const addProductWithoutPersonalization = () => {
     if (!product) return;
@@ -43,8 +62,8 @@ export default function ProductDetailPage() {
       {showSkipModal && product && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3a251a]/25 px-4 backdrop-blur-sm">
           <div className="relative w-full max-w-lg overflow-hidden rounded-[2rem] border border-boutique-brown/10 bg-[#fcfaf6] p-7 text-center shadow-2xl">
-            <img src="/cloud-watercolor-blue-light.png" className="pointer-events-none absolute -left-12 -top-10 w-44 opacity-45 mix-blend-multiply" alt="" />
-            <img src="/toy-wooden-star-solid.png" className="pointer-events-none absolute bottom-6 right-8 w-12 rotate-12 opacity-35 mix-blend-multiply" alt="" />
+            <img loading="lazy" src="/cloud-watercolor-blue-light.png" className="pointer-events-none absolute -left-12 -top-10 w-44 opacity-45 mix-blend-multiply" alt="" />
+            <img loading="lazy" src="/toy-wooden-star-solid.png" className="pointer-events-none absolute bottom-6 right-8 w-12 rotate-12 opacity-35 mix-blend-multiply" alt="" />
 
             <button onClick={() => setShowSkipModal(false)} className="absolute right-4 top-4 rounded-full bg-white/70 p-2 text-boutique-brown-light hover:bg-boutique-wood/10">
               <X className="h-5 w-5" />
@@ -94,9 +113,9 @@ export default function ProductDetailPage() {
       </header>
 
       <main className="relative z-10 mx-auto max-w-7xl px-6 py-8 md:py-14">
-        {productsLoading && <p className="text-center text-boutique-brown-light">Loading product...</p>}
+        {productLoading && <p className="text-center text-boutique-brown-light">Loading product...</p>}
 
-        {!productsLoading && !product && (
+        {!productLoading && !product && (
           <div className="mx-auto max-w-xl rounded-3xl border border-boutique-brown/10 bg-white/75 p-10 text-center shadow-sm">
             <h1 className="font-serif text-4xl text-boutique-brown">Product not found</h1>
             <p className="mt-3 text-boutique-brown-light">This item may be unavailable or still in draft.</p>
@@ -106,15 +125,15 @@ export default function ProductDetailPage() {
 
         {product && (
           <div className="relative grid gap-8 md:grid-cols-[52%_48%] md:items-center">
-            <img src="/cloud-watercolor-pink.png" className="pointer-events-none absolute -left-20 top-0 z-0 hidden w-64 opacity-55 mix-blend-multiply md:block" alt="" />
-            <img src="/toy-wooden-star-teether.png" className="pointer-events-none absolute right-[8%] top-0 z-0 hidden w-20 rotate-12 opacity-70 mix-blend-multiply md:block" alt="" />
-            <img src="/toy-pull-duck.png" className="pointer-events-none absolute -right-10 bottom-8 z-0 hidden w-36 -rotate-6 opacity-65 mix-blend-multiply xl:block" alt="" />
+            <img loading="lazy" src="/cloud-watercolor-pink.png" className="pointer-events-none absolute -left-20 top-0 z-0 hidden w-64 opacity-55 mix-blend-multiply md:block" alt="" />
+            <img loading="lazy" src="/toy-wooden-star-teether.png" className="pointer-events-none absolute right-[8%] top-0 z-0 hidden w-20 rotate-12 opacity-70 mix-blend-multiply md:block" alt="" />
+            <img loading="lazy" src="/toy-pull-duck.png" className="pointer-events-none absolute -right-10 bottom-8 z-0 hidden w-36 -rotate-6 opacity-65 mix-blend-multiply xl:block" alt="" />
 
             <div className="relative z-10 rounded-[2.2rem] border border-boutique-brown/10 bg-white/55 p-5 shadow-[0_24px_70px_rgba(58,37,26,0.10)] backdrop-blur-sm md:p-8">
               <div className="absolute inset-3 rounded-[1.8rem] border border-dashed border-boutique-brown/10"></div>
               <CardDesignFrame value={product.bgImage} className="absolute left-1/2 top-1/2 h-[78%] w-[88%] -translate-x-1/2 -translate-y-1/2 opacity-55 drop-shadow-[0_16px_28px_rgba(58,37,26,0.10)]" legacyClassName="absolute left-1/2 top-1/2 h-[78%] w-[88%] -translate-x-1/2 -translate-y-1/2 object-fill opacity-55 drop-shadow-[0_16px_28px_rgba(58,37,26,0.10)]" />
-              <img src="/toy-wooden-star-solid.png" className="absolute left-8 top-8 w-10 rotate-12 opacity-55 mix-blend-multiply" alt="" />
-              <img src="/cloud-watercolor-blue-light.png" className="absolute bottom-6 right-6 w-32 opacity-35 mix-blend-multiply" alt="" />
+              <img loading="lazy" src="/toy-wooden-star-solid.png" className="absolute left-8 top-8 w-10 rotate-12 opacity-55 mix-blend-multiply" alt="" />
+              <img loading="lazy" src="/cloud-watercolor-blue-light.png" className="absolute bottom-6 right-6 w-32 opacity-35 mix-blend-multiply" alt="" />
 
               <div className="relative mx-auto flex aspect-square max-w-[540px] items-center justify-center rounded-[2rem] bg-white/25">
                 <img src={product.imageUrl} className="max-h-[70%] max-w-[70%] object-contain drop-shadow-2xl transition-transform duration-500 hover:scale-105" alt={product.name} />
@@ -123,7 +142,7 @@ export default function ProductDetailPage() {
             </div>
 
             <section className="relative z-10 overflow-hidden rounded-[2.2rem] border border-boutique-brown/10 bg-white/75 p-7 shadow-[0_24px_70px_rgba(58,37,26,0.10)] backdrop-blur-sm md:p-10">
-              <img src="/cloud-watercolor-blue-light.png" className="pointer-events-none absolute -right-16 -top-16 w-56 opacity-35 mix-blend-multiply" alt="" />
+              <img loading="lazy" src="/cloud-watercolor-blue-light.png" className="pointer-events-none absolute -right-16 -top-16 w-56 opacity-35 mix-blend-multiply" alt="" />
               <div className="relative z-10">
                 <div className="mb-5 flex flex-wrap gap-2">
                   <span className="inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-boutique-bg px-4 py-2 text-xs font-bold uppercase tracking-wider text-boutique-brown-light">
