@@ -1,1 +1,27 @@
-{"rewrites":[{"source":"/admin","destination":"/"},{"source":"/admin/(.*)","destination":"/"},{"source":"/account","destination":"/"},{"source":"/account/(.*)","destination":"/"},{"source":"/products/(.*)","destination":"/"},{"source":"/checkout","destination":"/"},{"source":"/track-order","destination":"/"},{"source":"/payment-success","destination":"/"},{"source":"/payment-cancel","destination":"/"},{"source":"/paypal-success","destination":"/"}]}
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "mybabyshire.com"
+        }
+      ],
+      "destination": "https://www.mybabyshire.com/:path*",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    { "source": "/admin", "destination": "/" },
+    { "source": "/admin/(.*)", "destination": "/" },
+    { "source": "/account", "destination": "/" },
+    { "source": "/account/(.*)", "destination": "/" },
+    { "source": "/products/(.*)", "destination": "/" },
+    { "source": "/checkout", "destination": "/" },
+    { "source": "/track-order", "destination": "/" },
+    { "source": "/payment-success", "destination": "/" },
+    { "source": "/payment-cancel", "destination": "/" },
+    { "source": "/paypal-success", "destination": "/" }
+  ]
+}
