@@ -32,7 +32,7 @@ export const clearMemberSession = () => {
 };
 
 export const startGoogleMemberLogin = () => {
-  window.location.assign('/api/admin/login');
+  window.location.assign('/api/admin-google-start');
 };
 
 export const getMemberAuthErrorFromUrl = () => {
