@@ -30,9 +30,9 @@ export default function AccountLoginPage() {
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-boutique-brown/10 bg-[#fffaf3] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-boutique-brown-light">
             <Sparkles className="h-3.5 w-3.5" /> MY BABY SHIRE
           </div>
-          <h1 className="font-serif text-4xl leading-none text-boutique-brown">Member Sign In</h1>
+          <h1 className="font-serif text-4xl leading-none text-boutique-brown">Sign In</h1>
           <p className="mt-3 text-sm leading-relaxed text-boutique-brown-light">
-            Sign in with Google to save your account and view your MY BABY SHIRE orders.
+            Continue with Google. Admin accounts open the admin panel, customers open their account page.
           </p>
         </div>
 
@@ -51,9 +51,9 @@ export default function AccountLoginPage() {
 
         <div className="mt-5 rounded-2xl border border-boutique-brown/10 bg-[#fffaf3]/80 p-4 text-xs leading-relaxed text-boutique-brown-light">
           <div className="mb-2 flex items-center gap-2 font-bold text-boutique-brown">
-            <ShieldCheck className="h-4 w-4" /> Secure account
+            <ShieldCheck className="h-4 w-4" /> Secure access
           </div>
-          We only use your verified Google email to create your member account and match your order history.
+          We use your verified Google email to decide whether to open the admin panel or your customer account.
         </div>
       </div>
     </div>
