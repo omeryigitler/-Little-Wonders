@@ -32,7 +32,7 @@ export const clearMemberSession = () => {
 };
 
 export const startGoogleMemberLogin = () => {
-  window.location.assign('/api/admin-google-start');
+  window.location.assign('/api/account/google/start');
 };
 
 export const getMemberAuthErrorFromUrl = () => {
@@ -60,14 +60,18 @@ export const getMemberToken = () => {
 };
 
 const accountApiPath = (path: string) => {
-  if (path.endsWith('/me')) return '/api/admin/login?accountRoute=me';
-  if (path.endsWith('/orders')) return '/api/admin/login?accountRoute=orders';
+  if (path.endsWith('/me')) return '/api/account/me';
+  if (path.endsWith('/profile')) return '/api/account/profile';
+  if (path.endsWith('/addresses')) return '/api/account/addresses';
+  if (path.endsWith('/orders')) return '/api/account/orders';
   return path;
 };
 
-export const memberFetch = async <T>(path: string): Promise<T> => {
+export const memberFetch = async <T>(path: string, options: RequestInit = {}): Promise<T> => {
   const response = await fetch(accountApiPath(path), {
+    ...options,
     headers: {
+      ...(options.headers || {}),
       Authorization: `Bearer ${getMemberToken()}`,
     },
   });
