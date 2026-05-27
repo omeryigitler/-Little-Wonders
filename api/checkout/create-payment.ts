@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { PrismaClient } from '@prisma/client';
 import Stripe from 'stripe';
+import { calculateCheckoutTotals } from '../../lib/checkoutTotals.js';
 
 const prisma = new PrismaClient();
 
@@ -41,32 +42,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { customer, items, subtotal, shipping, total, currency = 'USD', shippingMethod } = req.body;
+    const { customer, items, currency = 'USD', shippingMethod } = req.body;
 
     if (!customer?.name || !customer?.email || !customer?.address || !customer?.city || !customer?.state || !customer?.zip) {
       return res.status(400).json({ error: 'Missing customer shipping details.' });
     }
 
-    if (!Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ error: 'Your gift bag is empty.' });
-    }
-
-    const selectedShippingMethod = shippingMethod || {
-      id: 'us-standard',
-      label: 'Standard Shipping',
-      carrier: 'USPS',
-      service: 'Ground Advantage',
-      estimatedDelivery: '3-5 business days',
-      amount: Number(shipping) || 0,
-    };
-
+    const totals = await calculateCheckoutTotals(prisma, items, shippingMethod);
     const orderNumber = createOrderNumber();
     const customerSnapshot = {
       customer,
-      subtotal: Number(subtotal) || 0,
-      shipping: Number(shipping) || 0,
-      shippingMethod: selectedShippingMethod,
-      total: Number(total) || 0,
+      subtotal: totals.subtotal,
+      shipping: totals.shipping,
+      shippingMethod: totals.shippingMethod,
+      total: totals.total,
       currency,
     };
 
@@ -75,17 +64,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         order_number: orderNumber,
         customer_name: customer.name,
         customer_email: customer.email,
-        total_amount: Number(total) || 0,
+        total_amount: totals.total,
         currency,
         payment_status: 'pending',
         order_status: 'processing',
         personalization_data_json: JSON.stringify(customerSnapshot),
         items: {
-          create: items.map((item: any) => ({
+          create: totals.items.map((item) => ({
             product_id: item.productId,
             product_name_snapshot: item.name,
-            quantity: Number(item.quantity) || 1,
-            price_snapshot: Number(item.price) || 0,
+            quantity: item.quantity,
+            price_snapshot: item.unitPrice,
             personalization_data_json: JSON.stringify(item.personalizationData || {}),
           })),
         },
@@ -95,34 +84,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const baseUrl = getBaseUrl(req);
 
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map((item: any) => {
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = totals.items.map((item) => {
       const productImage = getAbsoluteImageUrl(item.imageUrl, baseUrl);
       return {
-        quantity: Number(item.quantity) || 1,
+        quantity: item.quantity,
         price_data: {
           currency: String(currency).toLowerCase(),
-          unit_amount: toCents(Number(item.price) || 0),
+          unit_amount: toCents(item.unitPrice),
           product_data: {
             name: item.name,
-            description: item.description || 'Personalized MY BABY SHIRE gift',
+            description: item.description,
             images: productImage ? [productImage] : undefined,
             metadata: {
-              productId: item.productId || '',
+              productId: item.productId,
             },
           },
         },
       };
     });
 
-    if (Number(shipping) > 0) {
+    if (totals.shipping > 0) {
       lineItems.push({
         quantity: 1,
         price_data: {
           currency: String(currency).toLowerCase(),
-          unit_amount: toCents(Number(shipping) || 0),
+          unit_amount: toCents(totals.shipping),
           product_data: {
-            name: selectedShippingMethod.label || 'Gift-ready shipping',
-            description: `${selectedShippingMethod.carrier || 'Carrier'} · ${selectedShippingMethod.service || 'Shipping service'} · ${selectedShippingMethod.estimatedDelivery || 'Delivery estimate'}`,
+            name: totals.shippingMethod.label || 'Gift-ready shipping',
+            description: `${totals.shippingMethod.carrier || 'Carrier'} · ${totals.shippingMethod.service || 'Shipping service'} · ${totals.shippingMethod.estimatedDelivery || 'Delivery estimate'}`,
           },
         },
       });
@@ -143,13 +132,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       metadata: {
         orderId: order.id,
         orderNumber: order.order_number,
-        shippingMethod: selectedShippingMethod.id || 'us-standard',
+        shippingMethod: totals.shippingMethod.id || 'us-standard',
       },
       payment_intent_data: {
         metadata: {
           orderId: order.id,
           orderNumber: order.order_number,
-          shippingMethod: selectedShippingMethod.id || 'us-standard',
+          shippingMethod: totals.shippingMethod.id || 'us-standard',
         },
       },
     });
@@ -166,10 +155,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       checkoutUrl: session.url,
       sessionId: session.id,
       currency: order.currency,
-      subtotal: Number(subtotal) || 0,
-      shipping: Number(shipping) || 0,
-      shippingMethod: selectedShippingMethod,
-      total: Number(order.total_amount) || 0,
+      subtotal: totals.subtotal,
+      shipping: totals.shipping,
+      shippingMethod: totals.shippingMethod,
+      total: totals.total,
       message: 'Stripe Checkout session created.',
     });
   } catch (error) {
