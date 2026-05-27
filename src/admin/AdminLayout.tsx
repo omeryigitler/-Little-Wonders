@@ -14,6 +14,7 @@ export const AdminLayout = () => {
   const handleSignOut = () => {
     clearAdminSession();
     setIsAuthenticated(false);
+    window.location.assign('/');
   };
 
   return (
