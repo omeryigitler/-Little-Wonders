@@ -39,6 +39,14 @@ const getPayPalAccessToken = async () => {
   return data.access_token as string;
 };
 
+const getCapturedPayment = (paypalOrder: any) => {
+  return paypalOrder?.purchase_units?.[0]?.payments?.captures?.[0] || null;
+};
+
+const amountsMatch = (paypalAmount: unknown, orderAmount: unknown) => {
+  return Math.round(Number(paypalAmount || 0) * 100) === Math.round(Number(orderAmount || 0) * 100);
+};
+
 const sendPayPalConfirmationEmail = async (order: any) => {
   await sendPaymentConfirmedEmail({
     to: order.customer_email,
@@ -66,6 +74,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing PayPal token or order reference.' });
     }
 
+    const existingOrder = await prisma.orders.findUnique({
+      where: { order_number: orderNumber },
+      include: { items: true },
+    });
+
+    if (!existingOrder) {
+      return res.status(404).json({ error: 'Order not found.' });
+    }
+
     const accessToken = await getPayPalAccessToken();
 
     const response = await fetch(`${getPayPalBaseUrl()}/v2/checkout/orders/${encodeURIComponent(token)}/capture`, {
@@ -82,21 +99,42 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       throw new Error(data.message || data.name || 'PayPal payment could not be captured.');
     }
 
-    const isCompleted = data.status === 'COMPLETED';
+    const capturedPayment = getCapturedPayment(data);
+    const capturedAmount = capturedPayment?.amount?.value;
+    const capturedCurrency = String(capturedPayment?.amount?.currency_code || '').toUpperCase();
+    const expectedCurrency = String(existingOrder.currency || 'USD').toUpperCase();
+    const isCompleted = data.status === 'COMPLETED' && capturedPayment?.status === 'COMPLETED';
+    const isAmountValid = amountsMatch(capturedAmount, existingOrder.total_amount);
+    const isCurrencyValid = capturedCurrency === expectedCurrency;
+    const isReferenceValid = !data.purchase_units?.[0]?.reference_id || data.purchase_units[0].reference_id === existingOrder.order_number;
+
+    if (!isCompleted || !isAmountValid || !isCurrencyValid || !isReferenceValid) {
+      await prisma.orders.update({
+        where: { order_number: orderNumber },
+        data: {
+          payment_status: 'payment_review',
+          order_status: 'processing',
+          payment_reference: data.id || token,
+        },
+      });
+
+      return res.status(409).json({
+        error: 'PayPal payment could not be verified automatically.',
+        details: 'Captured payment status, amount, currency, or reference did not match the order.',
+      });
+    }
 
     const updatedOrder = await prisma.orders.update({
       where: { order_number: orderNumber },
       data: {
-        payment_status: isCompleted ? 'paid' : 'pending',
+        payment_status: 'paid',
         order_status: 'processing',
-        payment_reference: data.id || token,
+        payment_reference: capturedPayment.id || data.id || token,
       },
       include: { items: true },
     });
 
-    if (isCompleted) {
-      await sendPayPalConfirmationEmail(updatedOrder);
-    }
+    await sendPayPalConfirmationEmail(updatedOrder);
 
     return res.status(200).json({
       success: true,
