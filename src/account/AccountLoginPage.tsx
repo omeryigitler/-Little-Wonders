@@ -152,7 +152,42 @@ export default function AccountLoginPage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#fbf5ec] font-sans text-boutique-brown">
+    <div className="relative h-dvh overflow-hidden bg-[#fbf5ec] font-sans text-boutique-brown">
+      <style>
+        {`
+          @media (min-width: 768px) and (max-height: 940px) {
+            .member-login-main {
+              align-items: flex-start;
+            }
+
+            .member-login-panel {
+              transform: scale(0.9);
+            }
+          }
+
+          @media (min-width: 768px) and (max-height: 820px) {
+            .member-login-panel {
+              transform: scale(0.76);
+            }
+          }
+
+          @media (max-width: 767px) and (max-height: 760px) {
+            .member-login-main {
+              align-items: flex-start;
+            }
+
+            .member-login-panel {
+              transform: scale(0.78);
+            }
+          }
+
+          @media (max-width: 767px) and (max-height: 700px) {
+            .member-login-panel {
+              transform: scale(0.7);
+            }
+          }
+        `}
+      </style>
       <div className="pointer-events-none absolute inset-0 bg-pattern bg-[length:420px_420px] opacity-[0.22]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_34%,rgba(255,255,255,0.96)_0%,rgba(255,250,243,0.68)_38%,rgba(250,238,220,0.25)_72%,rgba(250,238,220,0)_100%)]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.78)_58%,rgba(255,250,244,0.92)_100%)]" />
@@ -196,12 +231,12 @@ export default function AccountLoginPage() {
       <FloatingStar className="right-[23vw] top-[32vh] hidden h-8 w-8 lg:block" />
       <FloatingStar className="bottom-[9vh] left-[34vw] hidden h-5 w-5 lg:block" />
 
-      <main className="relative z-10 flex min-h-screen items-center justify-center px-4 py-7 sm:px-6 lg:px-8">
+      <main className="member-login-main relative z-10 flex h-full overflow-hidden items-center justify-center px-4 py-7 sm:px-6 lg:px-8">
         <div className="absolute top-5 hidden w-[min(58rem,70vw)] rounded-[2rem] border border-[#e5d7c8] bg-white/72 px-8 py-5 text-center text-[12px] font-black uppercase tracking-[0.32em] text-boutique-brown-light shadow-[0_12px_35px_rgba(58,37,26,0.10)] backdrop-blur-sm lg:block">
           Soft gifts, tiny smiles, magical keepsakes
         </div>
 
-        <section className="relative mt-0 w-full max-w-[42rem] overflow-visible rounded-[2.5rem] border border-[#decfbe] bg-white/86 px-6 py-7 shadow-[0_34px_90px_rgba(58,37,26,0.19),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-[3px] sm:px-8 md:mt-14 md:px-10 md:py-8 lg:mt-16">
+        <section className="member-login-panel relative mt-0 w-full max-w-[42rem] origin-top overflow-visible rounded-[2.5rem] border border-[#decfbe] bg-white/86 px-6 py-7 shadow-[0_34px_90px_rgba(58,37,26,0.19),inset_0_1px_0_rgba(255,255,255,0.75)] backdrop-blur-[3px] sm:px-8 md:mt-14 md:px-10 md:py-8 lg:mt-16">
           <DecorativeCloud tone="blue" className="-left-7 top-[8.6rem] hidden h-14 w-36 opacity-60 md:block" />
           <DecorativeCloud tone="peach" className="right-10 top-[5.9rem] hidden h-14 w-36 opacity-60 md:block" />
           <DecorativeCloud tone="lavender" className="-bottom-5 left-11 h-12 w-28 opacity-80" />
