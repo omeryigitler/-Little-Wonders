@@ -222,8 +222,6 @@ export default function AccountLoginPage() {
         <DecorativeCloud tone="peach" className="bottom-[-0.7rem] right-[27vw] h-16 w-40 opacity-86" />
         <DecorativeCloud tone="blue" className="bottom-[0.7rem] right-[-1.5vw] h-20 w-48 opacity-78" />
         <div className="absolute bottom-[0.5rem] right-[17vw] h-8 w-36 rotate-[-8deg] rounded-full bg-[#d6a977]/28 blur-md" />
-        <img {...decorativeImageProps} src={assets.train} className="absolute bottom-[-0.25rem] right-[-0.4vw] z-20 w-[clamp(24rem,38vw,38rem)] drop-shadow-[0_34px_46px_rgba(95,61,34,0.29)]" />
-        <img {...decorativeImageProps} src={assets.blocks} className="absolute bottom-[-0.1rem] right-[0.4vw] z-10 w-[clamp(5rem,6vw,7rem)] rotate-[12deg] opacity-78 drop-shadow-[0_18px_24px_rgba(95,61,34,0.18)]" />
       </div>
 
       <DecorativeCloud tone="blue" className="left-[24vw] top-[18vh] hidden h-14 w-36 opacity-45 lg:block" />
@@ -240,6 +238,10 @@ export default function AccountLoginPage() {
           <DecorativeCloud tone="blue" className="-left-7 top-[8.6rem] hidden h-14 w-36 opacity-60 md:block" />
           <DecorativeCloud tone="peach" className="right-10 top-[5.9rem] hidden h-14 w-36 opacity-60 md:block" />
           <DecorativeCloud tone="lavender" className="-bottom-5 left-11 h-12 w-28 opacity-80" />
+          <div className="pointer-events-none absolute -bottom-12 -right-36 z-[8] hidden w-[clamp(21rem,29vw,31rem)] lg:block xl:-right-44">
+            <div className="absolute bottom-4 left-8 h-10 w-[74%] rotate-[-5deg] rounded-full bg-[#b98251]/24 blur-md" />
+            <img {...decorativeImageProps} src={assets.train} className="relative z-10 w-full drop-shadow-[0_30px_40px_rgba(95,61,34,0.28)]" />
+          </div>
           <div className="pointer-events-none absolute -right-4 top-[-1.9rem] hidden h-32 w-48 md:block">
             <DecorativeCloud tone="cream" className="right-0 top-0 h-20 w-44 opacity-95" />
             <span className="absolute right-20 top-[4.6rem] h-12 w-px bg-[#c9a16e]/45" />
