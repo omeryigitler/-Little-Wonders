@@ -201,7 +201,9 @@ export default function AccountLoginPage() {
 
       <div className="pointer-events-none absolute inset-0 z-0 hidden lg:block">
         <img {...decorativeImageProps} src={assets.moon} className="absolute left-[5vw] top-[5vh] w-[clamp(8rem,12vw,15rem)] rotate-[-8deg] drop-shadow-[0_20px_28px_rgba(129,85,44,0.18)]" />
-        <img {...decorativeImageProps} src={assets.sign} className="absolute left-[8vw] top-[23vh] w-[clamp(7rem,11vw,13rem)] rotate-[-5deg] opacity-95 drop-shadow-[0_22px_34px_rgba(129,85,44,0.14)] xl:left-[10vw]" />
+        <div className="absolute left-[8vw] top-[23vh] h-[clamp(7rem,9vw,10.5rem)] w-[clamp(7rem,11vw,13rem)] rotate-[-5deg] overflow-hidden opacity-95 drop-shadow-[0_22px_34px_rgba(129,85,44,0.14)] xl:left-[10vw]">
+          <img {...decorativeImageProps} src={assets.sign} className="w-full" />
+        </div>
         <img {...decorativeImageProps} src={assets.shop} className="absolute bottom-[11vh] left-[2vw] w-[clamp(14rem,22vw,26rem)] drop-shadow-[0_26px_44px_rgba(122,83,47,0.17)] xl:left-[4vw]" />
         <img {...decorativeImageProps} src={assets.teddy} className="absolute bottom-[2.5vh] left-[12vw] w-[clamp(9rem,15vw,19rem)] drop-shadow-[0_24px_36px_rgba(122,83,47,0.18)]" />
         <img {...decorativeImageProps} src={assets.blocks} className="absolute bottom-[3vh] left-[2vw] w-[clamp(7rem,10vw,12rem)] rotate-[-6deg] drop-shadow-[0_18px_26px_rgba(122,83,47,0.14)]" />
@@ -238,7 +240,7 @@ export default function AccountLoginPage() {
           <DecorativeCloud tone="blue" className="-left-7 top-[8.6rem] hidden h-14 w-36 opacity-60 md:block" />
           <DecorativeCloud tone="peach" className="right-10 top-[5.9rem] hidden h-14 w-36 opacity-60 md:block" />
           <DecorativeCloud tone="lavender" className="-bottom-5 left-11 h-12 w-28 opacity-80" />
-          <div className="pointer-events-none absolute -bottom-12 -right-36 z-[8] hidden w-[clamp(21rem,29vw,31rem)] lg:block xl:-right-44">
+          <div className="pointer-events-none absolute -bottom-24 -right-72 z-[16] hidden w-[clamp(18rem,24vw,25rem)] lg:block">
             <div className="absolute bottom-4 left-8 h-10 w-[74%] rotate-[-5deg] rounded-full bg-[#b98251]/24 blur-md" />
             <img {...decorativeImageProps} src={assets.train} className="relative z-10 w-full drop-shadow-[0_30px_40px_rgba(95,61,34,0.28)]" />
           </div>
